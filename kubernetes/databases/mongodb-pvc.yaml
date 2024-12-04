@@ -9,4 +9,5 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: gp2  # AWS EBS를 사용하는 storage class
+#      eks 사용 안하므로 삭제함.
+#  storageClassName: gp2  # AWS EBS를 사용하는 storage class

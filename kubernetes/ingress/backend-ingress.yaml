@@ -1,68 +1,70 @@
-# backend-ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: backend-ingress
-  namespace: default
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-spec:
-  rules:
-    - host: api.gitfolio.site  # 백엔드 API 도메인
-      http:
-        paths:
-          - path: /auth(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: auth-service
-                port:
-                  number: 8080
+# aida 가 작성중, ingress 는 모든 파트 합쳐서 하나로만 작성할 예정
 
-          - path: /member(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: member-service
-                port:
-                  number: 8080
-
-          - path: /resume(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: resume-service
-                port:
-                  number: 8080
-
-          - path: /payment(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: payment-service
-                port:
-                  number: 8080
-
-          - path: /notification(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: notification-service
-                port:
-                  number: 8080
-
-          - path: /chat(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: chat-service
-                port:
-                  number: 8080
-
-  tls:
-    - hosts:
-        - api.gitfolio.site
-      secretName: gitfolio-tls-secret  # TLS 인증서 시크릿
+## backend-ingress.yaml
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: backend-ingress
+#  namespace: default
+#  annotations:
+#    kubernetes.io/ingress.class: "nginx"
+#    nginx.ingress.kubernetes.io/rewrite-target: /$2
+#    nginx.ingress.kubernetes.io/use-regex: "true"
+#    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+#spec:
+#  rules:
+#    - host: api.gitfolio.site  # 백엔드 API 도메인
+#      http:
+#        paths:
+#          - path: /auth(/|$)(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: auth-service
+#                port:
+#                  number: 8080
+#
+#          - path: /member(/|$)(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: member-service
+#                port:
+#                  number: 8080
+#
+#          - path: /resume(/|$)(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: resume-service
+#                port:
+#                  number: 8080
+#
+#          - path: /payment(/|$)(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: payment-service
+#                port:
+#                  number: 8080
+#
+#          - path: /notification(/|$)(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: notification-service
+#                port:
+#                  number: 8080
+#
+#          - path: /chat(/|$)(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: chat-service
+#                port:
+#                  number: 8080
+#
+#  tls:
+#    - hosts:
+#        - api.gitfolio.site
+#      secretName: gitfolio-tls-secret  # TLS 인증서 시크릿
