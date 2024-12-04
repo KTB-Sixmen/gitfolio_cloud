@@ -1,0 +1,21 @@
+# payment-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: gitfolio
+  labels:
+    app: payment
+spec:
+  selector:
+    app: payment
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 81            # 파드가 개방하는 포트
+      targetPort: 8080    # 앱이 리스닝하는 포트 
+      protocol: TCP
+    - name: https
+      port: 444
+      targetPort: 8080
+      protocol: TCP
