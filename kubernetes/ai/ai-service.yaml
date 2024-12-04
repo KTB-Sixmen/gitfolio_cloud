@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: ai-service
   namespace: default
   labels:
-    app: frontend
+    app: ai
 spec:
-  type: LoadBalancer  # 외부 접근을 위해 LoadBalancer 타입 사용
+  type: LoadBalancer
   ports:
     - name: http
       port: 80
-      targetPort: 3000
+      targetPort: 8000
       protocol: TCP
     - name: https
       port: 443
-      targetPort: 3000
+      targetPort: 8000
       protocol: TCP
   selector:
-    app: frontend
+    app: ai
