@@ -1,0 +1,98 @@
+# ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitfolio-ingress     # 배포 이름으로 ingress-deployment 사용
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: gitfolio.site
+    http:
+      paths:
+      # 프런트엔드 서비스
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: front-service
+            port:
+              number: 80
+      # 인증 서비스
+      - path: /(oauth2 | login)(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      - path: /api/auth(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      # 멤버 서비스
+      - path: /api/members(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: member-service
+            port:
+              number: 81
+      # 채팅 서비스
+      - path: /api/chat(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-service
+            port:
+              number: 82
+      # 이력서 서비스
+      - path: /api/resumes(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-service
+            port:
+              number: 80
+      # 결제 서비스
+      - path: /api/payments(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: payment-service
+            port:
+              number: 81
+      # 알림 서비스
+      - path: /api/notifications(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 80
+      # AI 서비스
+      - path: /api/ai(/.*)?
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-service
+            port:
+              number: 80
+
+  - host: api.gitfolio.site
+    http:
+      paths:
+      # AI Swagger
+      - path: /(docs | openapi.json)
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-service
+            port:
+              number: 80

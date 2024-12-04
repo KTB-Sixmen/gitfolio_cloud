@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: backend-config
-  namespace: default
+  namespace: gitfolio
 data:
   # 서비스 URL 설정
   REDIRECT_ONBOARDING_URL: "https://www.gitfolio.site/onboarding"
@@ -20,6 +20,8 @@ data:
 
   # Kafka 설정
   KAFKA_HOST1: "kafka1-service:9092"
+  KAFKA_BROKER_ID: "1"
+  KAFKA_LISTENERS: "LISTENER_DOCKER://0.0.0.0:29092,LISTENER_EXTERNAL://0.0.0.0:9092
 
   # Redis 호스트 설정
   AUTH_REDIS_HOST: "redis-auth-service"
