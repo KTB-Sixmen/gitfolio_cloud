@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-deployment
+  namespace: default
+  labels:
+    app: ai
+spec:
+  replicas: 2  # 고가용성을 위해 2개의 레플리카 설정
+  selector:
+    matchLabels:
+      app: ai
+  template:
+    metadata:
+      labels:
+        app: ai
+    spec:
+      containers:
+        - name: ai
+          image: aida0/gitfolio_ai:test
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: ai-configmap
+            - secretRef:
+                name: ai-secret
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+#추후 헬스체크 추가시 구현필요
