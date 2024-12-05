@@ -9,7 +9,7 @@
 
 #   condition {
 #     host_header {
-#       values = ["api.gitfolio.site"]
+#       values = ["dev.gitfolio.site"]
 #     }
 #   }
 

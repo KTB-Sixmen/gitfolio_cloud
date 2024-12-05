@@ -131,7 +131,7 @@ resource "aws_lb_listener_rule" "https" {
 
   condition {
     host_header {
-      values = ["www.gitfolio.site"]
+      values = [format("%s.gitfolio.site", terraform.workspace == "dev" ? "dev" : "www.")]
     }
   }
 
