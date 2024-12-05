@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-deployment
-  namespace: default
+  namespace: gitfolio
   labels:
     app: auth
 spec:
@@ -25,10 +25,10 @@ spec:
                 name: backend-configmap
             - secretRef:
                 name: backend-secret
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "200m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "200m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"
