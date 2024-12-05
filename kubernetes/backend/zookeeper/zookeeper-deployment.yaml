@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper-deployment
+  namespace: gitfolio
+  labels:
+    app: zookeeper
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - name: zookeeper
+          image: zookeeper:3.6
+          ports:
+            - name: kafka1
+              containerPort: 9092
+            - name: kafka2
+              containerPort: 29092
+          envFrom:
+            - configMapRef:
+                name: backend-configmap

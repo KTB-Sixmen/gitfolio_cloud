@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-auth-service    # ConfigMap에 정의된 AUTH_REDIS_HOST와 일치
-  namespace: default
+  namespace: gitfolio
   labels:
     app: redis
 spec:
@@ -19,7 +19,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-resume-service  # ConfigMap에 정의된 RESUME_REDIS_HOST와 일치
-  namespace: default
+  namespace: gitfolio
   labels:
     app: redis
 spec:

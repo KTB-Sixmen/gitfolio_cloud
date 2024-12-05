@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frontend-configmap
-  namespace: default
+  namespace: gitfolio
 data:
   # 공개적으로 접근 가능한 URL들은 ConfigMap에 저장
   NEXT_PUBLIC_API_URL: "https://www.gitfolio.site"

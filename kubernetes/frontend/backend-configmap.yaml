@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: backend-config
-  namespace: default
+  namespace: gitfolio
 data:
   # 서비스 URL 설정
   REDIRECT_ONBOARDING_URL: "https://www.gitfolio.site/onboarding"

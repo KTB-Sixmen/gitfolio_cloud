@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: member-deployment
-  namespace: default
+  namespace: gitfolio
   labels:
     app: member
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: member
@@ -26,10 +26,10 @@ spec:
                 name: backend-configmap
             - secretRef:
                 name: backend-secret
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "300m"
-            limits:
-              memory: "1Gi"
-              cpu: "600m"
+          # resources:
+          #   requests:
+          #     memory: "512Mi"
+          #     cpu: "300m"
+          #   limits:
+          #     memory: "1Gi"
+          #     cpu: "600m"
