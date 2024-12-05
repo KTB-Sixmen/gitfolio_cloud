@@ -82,7 +82,7 @@ resource "aws_lb_listener_rule" "api_member" {
 
 resource "aws_lb_target_group" "api_member" {
   name                  = "gitfolio-api-member-tg"
-  port                  = var.target_port["http"]      // LB가 타겟으로 트래픽을 전달하는 포트(ALB->target(instance))
+  port                  = var.target_port["http"] + 1      // LB가 타겟으로 트래픽을 전달하는 포트(ALB->target(instance))
   protocol              = var.target_protocol
   vpc_id                = var.vpc_id
   
@@ -274,4 +274,60 @@ resource "aws_lb_target_group" "api_ai" {
 resource "aws_lb_target_group_attachment" "api_ai" {
   target_group_arn = aws_lb_target_group.api_ai.arn
   target_id        = var.ai_id
+}
+
+// ==================================================================================================
+
+resource "aws_lb_listener_rule" "api_payment" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 30005
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.api_payment.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/payments", "/api/payments/*"]
+    }
+  }
+
+  condition {
+    host_header {
+      values = ["dev.gitfolio.site"]
+    }
+  }
+
+  tags = {
+    Name = "Gitfolio payment api routing"
+  }
+}
+
+resource "aws_lb_target_group" "api_payment" {
+  name                  = "gitfolio-api-payment-tg"
+  port                  = var.target_port["http"] + 1      // LB가 타겟으로 트래픽을 전달하는 포트(ALB->target(instance))
+  protocol              = var.target_protocol
+  vpc_id                = var.vpc_id
+  
+  health_check {
+    enabled             = true
+    healthy_threshold   = var.health_threshold
+    interval            = var.health_interval
+    matcher             = var.health_matcher
+    path                = format("%sapi/payments", var.health_path)
+    port                = var.health_port
+    protocol            = var.health_protocol
+    timeout             = var.health_timeout
+    unhealthy_threshold = var.health_unthreshold
+  }
+
+  tags = {
+    Name = "Gitfolio lb api payment target group"
+  }
+}
+
+resource "aws_lb_target_group_attachment" "api_payment" {
+  target_group_arn = aws_lb_target_group.api_payment.arn
+  target_id        = var.backend_resume_id
 }
