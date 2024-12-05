@@ -15,7 +15,7 @@ resource "aws_lb_listener_rule" "api_auth" {
 
   condition {
     host_header {
-      values = ["api.gitfolio.site"]
+      values = ["dev.gitfolio.site"]
     }
   }
 
@@ -71,7 +71,7 @@ resource "aws_lb_listener_rule" "api_member" {
 
   condition {
     host_header {
-      values = ["api.gitfolio.site"]
+      values = ["dev.gitfolio.site"]
     }
   }
 
@@ -127,7 +127,7 @@ resource "aws_lb_listener_rule" "api_resume" {
 
   condition {
     host_header {
-      values = ["api.gitfolio.site"]
+      values = ["dev.gitfolio.site"]
     }
   }
 
@@ -183,7 +183,7 @@ resource "aws_lb_listener_rule" "api_notification" {
 
   condition {
     host_header {
-      values = ["api.gitfolio.site"]
+      values = ["dev.gitfolio.site"]
     }
   }
 
@@ -239,7 +239,7 @@ resource "aws_lb_listener_rule" "api_ai" {
 
   condition {
     host_header {
-      values = ["api.gitfolio.site"]
+      values = ["dev.gitfolio.site"]
     }
   }
 

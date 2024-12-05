@@ -59,7 +59,7 @@ resource "aws_lb_listener_rule" "ai_routing" {
 
   condition {
     host_header {
-      values = ["api.gitfolio.site"]
+      values = ["dev.gitfolio.site"]
     }
   }
 
