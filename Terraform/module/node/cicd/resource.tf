@@ -7,7 +7,7 @@ resource "aws_instance" "jenkins" {
   
   tags = {
     Name        = "Gitfolio Jenkins"
-    Environment = terraform.workspace,
+    Environment = terraform.workspace
     Service     = "jenkins"
     Type        = "ec2"
   }
@@ -28,7 +28,7 @@ resource "aws_instance" "argo" {
 
   tags = {
     Name        = "Gitfolio ArgoCD"
-    Environment = terraform.workspace,
+    Environment = terraform.workspace
     Service     = "argocd"
     Type        = "ec2"
   }
