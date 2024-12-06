@@ -233,7 +233,7 @@ resource "aws_lb_listener_rule" "api_ai" {
 
   condition {
     path_pattern {
-      values = ["/api/ai", "/api/ai/*"]
+      values = ["/api/ai/resumes", "/api/ai/resumes/*"]
     }
   }
 

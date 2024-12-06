@@ -11,7 +11,7 @@ resource "aws_instance" "jenkins" {
     Service     = "jenkins"
     Type        = "ec2"
   }
-
+# 추후 추가 예정
 #   root_block_device {
 #     volume_size = 30  # Jenkins는 빌드 아티팩트를 위한 충분한 공간 필요
 #     volume_type = "gp3"
@@ -27,9 +27,9 @@ resource "aws_instance" "argo" {
   private_ip = var.private_ips["argo"]
 
   tags = {
-    Name        = "Gitfolio Jenkins"
+    Name        = "Gitfolio ArgoCD"
     Environment = terraform.workspace,
-    Service     = "jenkins"
+    Service     = "argocd"
     Type        = "ec2"
   }
 
