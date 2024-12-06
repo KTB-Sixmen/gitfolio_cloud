@@ -121,7 +121,7 @@ resource "aws_lb_listener_rule" "api_resume" {
 
   condition {
     path_pattern {
-      values = ["/api/resumes-back", "/api/resumes-back/*"]
+      values = ["/api/resumes", "/api/resumes/*"]
     }
   }
 
@@ -233,7 +233,7 @@ resource "aws_lb_listener_rule" "api_ai" {
 
   condition {
     path_pattern {
-      values = ["/api/resumes", "/api/resumes/*"]
+      values = ["/api/ai", "/api/ai/*"]
     }
   }
 
