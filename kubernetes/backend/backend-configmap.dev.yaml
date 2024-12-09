@@ -6,8 +6,8 @@ metadata:
   namespace: gitfolio
 data:
   # 서비스 URL 설정
-  REDIRECT_ONBOARDING_URL: "https://www.gitfolio.site/onboarding"
-  REDIRECT_MAIN_URL: "https://www.gitfolio.site/community"
+  REDIRECT_ONBOARDING_URL: "https://dev.gitfolio.site/onboarding"
+  REDIRECT_MAIN_URL: "https://dev.gitfolio.site/community"
 
   # 서비스 포트 설정
   MEMBER_GRPC_PORT: "9090"
@@ -21,7 +21,11 @@ data:
   # Kafka 설정
   KAFKA_HOST1: "kafka1-service:9092"
   KAFKA_BROKER_ID: "1"
-  KAFKA_LISTENERS: "LISTENER_DOCKER://0.0.0.0:29092,LISTENER_EXTERNAL://0.0.0.0:9092
+  KAFKA_LISTENERS: "LISTENER_DOCKER://0.0.0.0:29092,LISTENER_EXTERNAL://0.0.0.0:9092"
+
+  # JWT 토큰 설정
+  ACCESS_TOKEN_EXPIRY: "600000"
+  REFRESH_TOKEN_EXPIRY: "86400000"
 
   # Redis 호스트 설정
   AUTH_REDIS_HOST: "redis-auth-service"
