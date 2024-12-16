@@ -191,3 +191,18 @@ module "gitfolio_ecr" {
   policy_countType   = var.policy_countType
   policy_countNum    = var.policy_countNum
 }
+
+// cicd shared 에서 상태 참조함
+module "gitfolio_cicd" {
+  source = "./module/node/cicd"
+  count  = terraform.workspace == "feature-cicd" ? 1 : 0
+
+#   vpc_id             = data.terraform_remote_state.shared.outputs.vpc_id
+  security_group_ids = data.terraform_remote_state.shared.outputs.security_group_ids
+  instance_types     = var.instance_types
+  private_subnet_ids = data.terraform_remote_state.shared.outputs.private_subnet_ids
+  instance_indexes   = var.instance_indexes
+  ami_id            = data.terraform_remote_state.shared.outputs.amazon_linux_id  # AMI ID도 shared에서 가져옵니다
+  private_ips       = var.private_ips
+  iam_instance_profile = var.iam_instance_profile
+}
