@@ -73,11 +73,6 @@ variable "multi_az" {
   type        = bool
 }
 
-variable "primary_az" {
-  description = "AZ for primary instance"
-  type        = string
-}
-
 variable "backup_period" {
   description = "Backup retention period"
   type        = number
