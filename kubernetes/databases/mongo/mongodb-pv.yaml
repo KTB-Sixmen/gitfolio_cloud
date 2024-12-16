@@ -1,14 +1,29 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mongodb-pv
+  name: mongodb-master-pv
 spec:
+  accessModes:
+    - ReadWriteOnce    # 단일 노드에서만 읽기/쓰기 가능
   capacity:
     storage: 10Gi    # PVC와 동일한 크기로 설정
   volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce    # 단일 노드에서만 읽기/쓰기 가능
   persistentVolumeReclaimPolicy: Retain    # PVC가 삭제되어도 데이터 유지
   hostPath:
-    path: /data/mongodb    # 호스트 시스템의 경로
+    path: /data/mongodb/master    # 호스트 시스템의 경로
+    type: DirectoryOrCreate    # 디렉토리가 없으면 자동 생성
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongodb-slave-pv
+spec:
+  accessModes:
+    - ReadWriteOnce    # 단일 노드에서만 읽기/쓰기 가능
+  capacity:
+    storage: 10Gi    # PVC와 동일한 크기로 설정
+  volumeMode: Filesystem
+  persistentVolumeReclaimPolicy: Retain    # PVC가 삭제되어도 데이터 유지
+  hostPath:
+    path: /data/mongodb/slave    # 호스트 시스템의 경로
     type: DirectoryOrCreate    # 디렉토리가 없으면 자동 생성

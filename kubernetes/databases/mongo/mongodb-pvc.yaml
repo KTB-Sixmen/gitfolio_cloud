@@ -1,7 +1,21 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongodb-pvc
+  name: mongodb-master-pvc
+  namespace: gitfolio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+#      eks 사용 안하므로 삭제함.
+#  storageClassName: gp2  # AWS EBS를 사용하는 storage class
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-slave-pvc
   namespace: gitfolio
 spec:
   accessModes:
