@@ -28,24 +28,3 @@ resource "aws_db_instance" "mysql" {
     Type        = "mysql"
   }
 }
-
-resource "aws_db_instance" "mysql_replica" {
-  identifier          = format("%s-replica", var.identifier)
-  instance_class      = var.instance_class
-  replicate_source_db = var.identifier
-  storage_type        = var.storage_type
-  storage_encrypted   = true
-
-  maintenance_window    = "Tue:04:00-Tue:05:00"
-  copy_tags_to_snapshot = true
-
-  publicly_accessible = false
-  skip_final_snapshot = true
-
-  tags = {
-    Name        = "Gitfolio MySQL Read Replica",
-    Environment = terraform.workspace,
-    Service     = "db",
-    Type        = "mysql-read-replica"
-  }
-}
