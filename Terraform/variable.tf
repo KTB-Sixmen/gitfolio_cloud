@@ -66,7 +66,7 @@ variable "db_subnet_cidrs" {
   type        = list(string)
 }
 
-variable identifier {
+variable "identifier" {
   description = "RDS instance name"
   type        = string
 }
@@ -108,6 +108,16 @@ variable "db_username" {
 
 variable "db_password" {
   description = "Database password"
+  type        = string
+}
+
+variable "backup_period" {
+  description = "Backup retention period"
+  type        = number
+}
+
+variable "backup_window" {
+  description = "Backup window"
   type        = string
 }
 
@@ -184,33 +194,33 @@ variable "health_unthreshold" {
 
 // ECR 변수
 variable "ecr_namespace_name" {
-  description  = "Namespace of the ECR repository"
-  type         = string
+  description = "Namespace of the ECR repository"
+  type        = string
 }
 
 variable "ecr_repo_name" {
-  description  = "Name of the ECR repository"
-  type         = list(string)
+  description = "Name of the ECR repository"
+  type        = list(string)
 }
 
 variable "tag_mutability" {
-  description  = "Attribute which image tage is mutable"
-  type         = string
+  description = "Attribute which image tage is mutable"
+  type        = string
 }
 
 variable "policy_tagStatus" {
-  description  = "Tag status of ECR lifesycle policy"
-  type         = string
+  description = "Tag status of ECR lifesycle policy"
+  type        = string
 }
 
 variable "policy_countType" {
-  description  = "Count type of ECR lifecycle policy"
-  type         = string
+  description = "Count type of ECR lifecycle policy"
+  type        = string
 }
 
 variable "policy_countNum" {
-  description  = "Count number of ECR lifecycle policy"
-  type         = number
+  description = "Count number of ECR lifecycle policy"
+  type        = number
 }
 
 variable "ecr_index" {
@@ -221,9 +231,9 @@ variable "ecr_index" {
 
 variable "kubernetes_config" {
   type = object({
-    worker_count       = number
-    pod_network_cidr   = string
-    service_cidr       = string
+    worker_count     = number
+    pod_network_cidr = string
+    service_cidr     = string
   })
   description = "Kubernetes configuration settings"
 }

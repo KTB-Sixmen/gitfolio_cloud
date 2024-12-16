@@ -8,7 +8,7 @@ variable "availability_zones" {
   type        = list(string)
 }
 
-variable identifier {
+variable "identifier" {
   description = "RDS instance name"
   type        = string
 }
@@ -65,5 +65,15 @@ variable "security_group_ids" {
 
 variable "rds_subnet_group_name" {
   description = "RDS subnet group name"
+  type        = string
+}
+
+variable "backup_period" {
+  description = "Backup retention period"
+  type        = number
+}
+
+variable "backup_window" {
+  description = "Backup window"
   type        = string
 }
