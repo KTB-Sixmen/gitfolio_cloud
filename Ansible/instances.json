@@ -1,29 +1,5 @@
 [
   {
-    "Name": "Gitfolio Kubernetes master node",
-    "InstanceId": "i-020d82fef878cc4e3",
-    "IP": "10.0.103.6",
-    "Service": "master",
-    "Type": "kubernetes",
-    "Environment": "dev"
-  },
-  {
-    "Name": "Gitfolio Kubernetes worker node0",
-    "InstanceId": "i-0e8c9909124498fe1",
-    "IP": "10.0.103.8",
-    "Service": "worker",
-    "Type": "kubernetes",
-    "Environment": "dev"
-  },
-  {
-    "Name": "Gitfolio Kubernetes worker node1",
-    "InstanceId": "i-05a4d413021d83f6d",
-    "IP": "10.0.103.9",
-    "Service": "worker",
-    "Type": "kubernetes",
-    "Environment": "dev"
-  },
-  {
     "Name": "Gitfolio Frontend",
     "InstanceId": "i-033b4b7be6dbbe75b",
     "IP": "10.0.104.33",
@@ -72,18 +48,26 @@
     "Environment": "dev"
   },
   {
-    "Name": "Gitfolio MongoDB",
-    "InstanceId": "i-0a54741a94bcfebe2",
+    "Name": "Gitfolio Jenkins",
+    "InstanceId": "i-078d396cb737b751d",
+    "IP": "10.0.107.11",
+    "Service": "jenkins",
+    "Type": "ec2",
+    "Environment": "feature-cicd"
+  },
+  {
+    "Name": "Gitfolio DB Master",
+    "InstanceId": "i-0d7b378d16aeaf4d8",
     "IP": "10.0.109.14",
-    "Service": "mongo",
+    "Service": "db_master",
     "Type": "db",
     "Environment": "shared"
   },
   {
-    "Name": "Gitfolio Redis",
-    "InstanceId": "i-0c7cbd42c2a406932",
+    "Name": "Gitfolio DB Slave",
+    "InstanceId": "i-0212371911693f22b",
     "IP": "10.0.110.38",
-    "Service": "redis",
+    "Service": "db_slave",
     "Type": "db",
     "Environment": "shared"
   }

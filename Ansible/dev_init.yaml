@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: db
   gather_facts: yes
   tasks:
   - name: Install environment
