@@ -24,13 +24,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: frontend-configmap
-            - secretRef:
-                name: frontend-secret
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "200m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
+          #   - secretRef:
+          #       name: frontend-secret
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "200m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"
 #추후 헬스체크 추가시 구현필요

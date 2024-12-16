@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-configmap
+  namespace: gitfolio
+data:
+  # 공개적으로 접근 가능한 URL들은 ConfigMap에 저장
+  NEXT_PUBLIC_API_URL: "https://www.gitfolio.site"
+  # 내부 서비스 URL들은 쿠버네티스 서비스 이름으로 변경
+  AUTH_SERVER_URL: "http://auth-service"
+  MEMBERS_SERVER_URL: "http://member-service"
+  RESUMES_SERVER_URL: "http://resume-service"
+  PAYMENTS_SERVER_URL: "http://payment-service"
+  NOTIFICATIONS_SERVER_URL: "http://notification-service"
+  # 추후 채팅 구현 대비
+  CHAT_SERVER_URL: "http://chat-service"
