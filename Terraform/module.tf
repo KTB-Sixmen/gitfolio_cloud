@@ -117,7 +117,7 @@ module "gitfolio_rds" {
 
 module "gitfolio_nosql" {
   source = "./module/DB/NoSQL"
-  count  = local.shared ? 2 : 0
+  count  = local.shared ? 3 : 0
 
   vpc_id               = module.gitfolio_network[0].vpc_id
   public_subnet_cidrs  = var.public_subnet_cidrs
