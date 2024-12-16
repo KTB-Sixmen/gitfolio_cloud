@@ -11,6 +11,7 @@ resource "aws_db_instance" "mysql" {
   username = var.db_username
   password = var.db_password
 
+  multi_az                = var.multi_az
   maintenance_window      = "Mon:04:00-Mon:05:00"
   backup_retention_period = var.backup_period
   backup_window           = var.backup_window

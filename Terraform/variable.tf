@@ -111,6 +111,11 @@ variable "db_password" {
   type        = string
 }
 
+variable "multi_az" {
+  description = "Enable multi-AZ"
+  type        = bool
+}
+
 variable "backup_period" {
   description = "Backup retention period"
   type        = number

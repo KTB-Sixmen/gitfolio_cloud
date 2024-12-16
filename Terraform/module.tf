@@ -110,6 +110,7 @@ module "gitfolio_rds" {
   db_name           = var.db_name
   db_username       = var.db_username
   db_password       = var.db_password
+  multi_az          = var.multi_az
   backup_period     = var.backup_period
   backup_window     = var.backup_window
 }
