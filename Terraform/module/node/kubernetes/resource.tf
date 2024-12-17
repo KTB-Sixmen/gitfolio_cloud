@@ -9,8 +9,9 @@ resource "aws_instance" "master" {
   tags = {
     Name        = "Gitfolio Kubernetes master node"
     Environment = terraform.workspace
-    Service     = "k8s_master" # aws_ec2.yaml에서 이 태그로 그룹핑
+    Service     = "master" # aws_ec2.yaml에서 이 태그로 그룹핑
     Type        = "kubernetes"
+    Index       = 0
   }
 }
 
@@ -26,7 +27,8 @@ resource "aws_instance" "ingress" {
   tags = {
     Name        = "Gitfolio Kubernetes worker node${count.index}"
     Environment = terraform.workspace
-    Service     = "k8s_worker" # aws_ec2.yaml에서 이 태그로 그룹핑
+    Service     = "worker" # aws_ec2.yaml에서 이 태그로 그룹핑
     Type        = "kubernetes"
+    Index       = count.index + 1
   }
 }
