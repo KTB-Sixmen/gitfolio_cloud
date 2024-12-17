@@ -232,12 +232,12 @@ resource "aws_security_group" "discord_bot" {
 resource "aws_security_group" "cicd" {
   name   = "cicd_sg"
   vpc_id = aws_vpc.gitfolio.id
-# 젠킨스 사용하려면 8080 열어야함
+  # 젠킨스 사용하려면 8080 열어야함
   ingress {
-    description = "Kubernetes API"
-    from_port = 8080
-    to_port = 8080
-    protocol = "tcp"
+    description = "Jenkins"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
     cidr_blocks = [var.any_ip]
   }
 
