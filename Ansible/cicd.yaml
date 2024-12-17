@@ -1,6 +1,8 @@
 ---
 - name: Setup CI/CD Environment
-  hosts: all
+#  hosts: all
+# all 로 하면 모든 호스트에 저장
+  hosts: jenkins
   become: yes
   vars:
     jenkins_version: "{{ tool_versions.jenkins }}"
