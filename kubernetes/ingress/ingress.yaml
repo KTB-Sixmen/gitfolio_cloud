@@ -85,7 +85,7 @@ spec:
             port:
               number: 80
 
-  - host: api.gitfolio.site
+  - host: dev.gitfolio.site
     http:
       paths:
       # AI Swagger

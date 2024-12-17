@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-master-statefulset
+  namespace: gitfolio
+  labels:
+    app: redis-master
+spec:
+  replicas: 1
+  serviceName: redis-master
+  selector:
+    matchLabels:
+      app: redis-master
+  template:
+    metadata:
+      labels:
+        app: redis-master
+    spec:
+      containers:
+        - name: redis-master
+          image: redis:latest
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-master-pvc
+              mountPath: /data
+          # ConfigMap과 Secret에서 환경변수 가져오기
+          envFrom:
+            - configMapRef:
+                name: backend-configmap
+            - secretRef:
+                name: backend-secret
+          # resources:
+          #   requests:
+          #     memory: "512Mi"
+          #     cpu: "200m"
+          #   limits:
+          #     memory: "1Gi"
+          #     cpu: "500m"
+      volumes:
+        - name: redis-master-pvc
+          persistentVolumeClaim:
+            claimName: redis-master-pvc
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-slave-statefulset
+  namespace: gitfolio
+  labels:
+    app: redis-slave
+spec:
+  replicas: 1
+  serviceName: redis-slave
+  selector:
+    matchLabels:
+      app: redis-slave
+  template:
+    metadata:
+      labels:
+        app: redis-slave
+    spec:
+      containers:
+        - name: redis-slave
+          image: redis:latest
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-slave-pvc
+              mountPath: /data
+          # ConfigMap과 Secret에서 환경변수 가져오기
+          envFrom:
+            - configMapRef:
+                name: backend-configmap
+            - secretRef:
+                name: backend-secret
+          # resources:
+          #   requests:
+          #     memory: "512Mi"
+          #     cpu: "200m"
+          #   limits:
+          #     memory: "1Gi"
+          #     cpu: "500m"
+      volumes:
+        - name: redis-slave-pvc
+          persistentVolumeClaim:
+            claimName: redis-slave-pvc
