@@ -1,31 +1,31 @@
 [
   {
     "Name": "Gitfolio Kubernetes master node",
-    "InstanceId": "i-020d82fef878cc4e3",
+    "InstanceId": "i-07150d8cd9546a71a",
     "IP": "10.0.103.6",
-    "Service": "master",
+    "Service": "k8s_master",
     "Type": "kubernetes",
     "Environment": "dev"
   },
   {
     "Name": "Gitfolio Kubernetes worker node0",
-    "InstanceId": "i-0e8c9909124498fe1",
+    "InstanceId": "i-0985d6e047a7df5be",
     "IP": "10.0.103.8",
-    "Service": "worker",
+    "Service": "k8s_worker",
     "Type": "kubernetes",
     "Environment": "dev"
   },
   {
     "Name": "Gitfolio Kubernetes worker node1",
-    "InstanceId": "i-05a4d413021d83f6d",
+    "InstanceId": "i-0e066a7e4b4ca9381",
     "IP": "10.0.103.9",
-    "Service": "worker",
+    "Service": "k8s_worker",
     "Type": "kubernetes",
     "Environment": "dev"
   },
   {
     "Name": "Gitfolio Frontend",
-    "InstanceId": "i-033b4b7be6dbbe75b",
+    "InstanceId": "i-0b7c1f10e0afbae10",
     "IP": "10.0.104.33",
     "Service": "front",
     "Type": "ec2",
@@ -33,7 +33,7 @@
   },
   {
     "Name": "Gitfolio BE4",
-    "InstanceId": "i-0ef502c7d8b775e44",
+    "InstanceId": "i-0cfa17cfd1f3eaba8",
     "IP": "10.0.105.102",
     "Service": "back",
     "Type": "ec2",
@@ -41,7 +41,7 @@
   },
   {
     "Name": "Gitfolio BE1",
-    "InstanceId": "i-0d33980a2f5856026",
+    "InstanceId": "i-0f109aadc86e314f7",
     "IP": "10.0.105.44",
     "Service": "back",
     "Type": "ec2",
@@ -49,7 +49,7 @@
   },
   {
     "Name": "Gitfolio BE2",
-    "InstanceId": "i-0f8618259ab94a8a0",
+    "InstanceId": "i-02362bdbe61fb4cae",
     "IP": "10.0.105.75",
     "Service": "back",
     "Type": "ec2",
@@ -57,7 +57,7 @@
   },
   {
     "Name": "Gitfolio BE3",
-    "InstanceId": "i-0f6f4ae9232ac21d1",
+    "InstanceId": "i-04f9b5a130b87ad79",
     "IP": "10.0.105.99",
     "Service": "back",
     "Type": "ec2",
@@ -65,25 +65,41 @@
   },
   {
     "Name": "Gitfolio AI",
-    "InstanceId": "i-02c849738e436c50a",
+    "InstanceId": "i-0cac7947a944dc50f",
     "IP": "10.0.106.88",
     "Service": "ai",
     "Type": "ec2",
     "Environment": "dev"
   },
   {
-    "Name": "Gitfolio MongoDB",
-    "InstanceId": "i-0a54741a94bcfebe2",
+    "Name": "Gitfolio Jenkins",
+    "InstanceId": "i-078d396cb737b751d",
+    "IP": "10.0.107.11",
+    "Service": "jenkins",
+    "Type": "ec2",
+    "Environment": "feature-cicd"
+  },
+  {
+    "Name": "Gitfolio DB Master",
+    "InstanceId": "i-0d7b378d16aeaf4d8",
     "IP": "10.0.109.14",
-    "Service": "mongo",
+    "Service": "db_master",
     "Type": "db",
     "Environment": "shared"
   },
   {
-    "Name": "Gitfolio Redis",
-    "InstanceId": "i-0c7cbd42c2a406932",
+    "Name": "Gitfolio DB Slave1",
+    "InstanceId": "i-0212371911693f22b",
     "IP": "10.0.110.38",
-    "Service": "redis",
+    "Service": "db_slave",
+    "Type": "db",
+    "Environment": "shared"
+  },
+  {
+    "Name": "Gitfolio DB Slave2",
+    "InstanceId": "i-058724ae0f75e2f40",
+    "IP": "10.0.110.39",
+    "Service": "db_slave",
     "Type": "db",
     "Environment": "shared"
   },

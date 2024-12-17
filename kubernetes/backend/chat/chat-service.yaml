@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: chat-service
-  namespace: default
+  namespace: gitfolio
   labels:
     app: chat
 spec:

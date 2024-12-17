@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ai-configmap
-  namespace: default
+  namespace: gitfolio
 data:
   HOST: "0.0.0.0"
   PORT: "8000"

@@ -1,8 +1,20 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: redis-pvc
-  namespace: default
+  name: redis-master-pvc
+  namespace: gitfolio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-slave-pvc
+  namespace: gitfolio
 spec:
   accessModes:
     - ReadWriteOnce

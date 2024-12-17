@@ -1,16 +1,6 @@
 ---
 - name: Setup CI/CD Environment
-#  hosts: all
-# all 로 하면 모든 호스트에 저장
   hosts: jenkins
-  become: yes
-  vars:
-    jenkins_version: "{{ tool_versions.jenkins }}"
-    java_version: "{{ tool_versions.java }}"
-    docker_version: "{{ tool_versions.docker }}"
-    kubectl_version: "{{ tool_versions.kubectl }}"
-    argocd_version: "{{ tool_versions.argocd }}"
-
   tasks:
     # 시스템 업데이트 및 기본 도구 설치
     - name: Update system packages
@@ -19,19 +9,14 @@
         state: latest
         update_only: yes
 
-    - name: Install basic tools
+    - name: Install Environment 
       dnf:
         name:
           - git
           - wget
           - jq
           - unzip
-        state: present
-
-    # Docker 설치 및 설정
-    - name: Install Docker
-      dnf:
-        name: docker
+          - docker
         state: present
 
     - name: Start and enable Docker service
@@ -49,23 +34,23 @@
     # Java 설치 (Amazon Corretto)
     - name: Install Amazon Corretto Java
       dnf:
-        name: "java-{{ java_version }}-amazon-corretto"
+        name: "java-{{ ansible_cicd_tools_version.java }}"
         state: present
 
     # Jenkins 설치 및 설정
     - name: Add Jenkins repository
-      get_url:
-        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
-        dest: /etc/yum.repos.d/jenkins.repo
-
-    - name: Import Jenkins key
-      rpm_key:
-        key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-        state: present
+      yum_repository:
+        name: jenkins
+        description: Jenkins
+        baseurl: "{{ ansible_jenkins_repo_url }}.repo"
+        gpgkey: "{{ ansible_jenkins_repo_url }}.io.key"
+        gpgcheck: yes
+        enabled: yes
 
     - name: Install Jenkins
       dnf:
-        name: jenkins
+        name:
+          - jenkins
         state: present
 
     - name: Create Jenkins init.groovy.d directory
@@ -76,23 +61,26 @@
         group: jenkins
 
     # ArgoCD 설치
-    - name: Install kubectl
-      get_url:
-        url: "https://dl.k8s.io/release/v{{ kubectl_version }}/bin/linux/amd64/kubectl"
-        dest: /usr/local/bin/kubectl
-        mode: '0755'
+    - name: Add Kubernetes repo
+      yum_repository:
+        name: kubernetes
+        description: Kubernetes
+        baseurl: "{{ ansible_kubernetes_repo_url }}"
+        gpgkey: "{{ ansible_kubernetes_repo_url }}/repodata/repomd.xml.key"
+        gpgcheck: yes
+        enabled: yes
+        exclude: 
+          - kubelet
+          - kubeadm
+          - kubectl
+          - cri-tools
+          - kubernetes-cni
 
     - name: Install ArgoCD CLI
       get_url:
-        url: "https://github.com/argoproj/argo-cd/releases/download/{{ argocd_version }}/argocd-linux-amd64"
+        url: "https://github.com/argoproj/argo-cd/releases/download/{{ ansible_cicd_tools_version.argocd }}/argocd-linux-amd64"
         dest: /usr/local/bin/argocd
         mode: '0755'
-
-    # AWS CLI 설치 (ECR 접근용)
-    - name: Install AWS CLI
-      dnf:
-        name: aws-cli
-        state: present
 
     # 서비스 시작 및 활성화
     - name: Start and enable Jenkins
@@ -103,7 +91,8 @@
 
     # Jenkins 초기 설정을 위한 관리자 비밀번호 저장
     - name: Get Jenkins initial admin password
-      command: cat /var/lib/jenkins/secrets/initialAdminPassword
+      shell: |
+        cat /var/lib/jenkins/secrets/initialAdminPassword
       register: jenkins_password
       changed_when: false
 
@@ -122,16 +111,3 @@
         owner: jenkins
         group: jenkins
         mode: '0644'
-
-    # 방화벽 설정
-    - name: Configure firewall for Jenkins
-      firewalld:
-        port: "{{ jenkins_port }}/tcp"
-        permanent: yes
-        state: enabled
-
-    - name: Configure firewall for ArgoCD
-      firewalld:
-        port: "{{ argocd_port }}/tcp"
-        permanent: yes
-        state: enabled
