@@ -32,3 +32,8 @@ variable "iam_instance_profile" {
   description = "IAM instance profile"
   type        = string
 }
+
+# variable "vpc_id" {
+#   description = "ID of the VPC"
+#   type        = string
+# }

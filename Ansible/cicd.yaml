@@ -1,0 +1,137 @@
+---
+- name: Setup CI/CD Environment
+#  hosts: all
+# all 로 하면 모든 호스트에 저장
+  hosts: jenkins
+  become: yes
+  vars:
+    jenkins_version: "{{ tool_versions.jenkins }}"
+    java_version: "{{ tool_versions.java }}"
+    docker_version: "{{ tool_versions.docker }}"
+    kubectl_version: "{{ tool_versions.kubectl }}"
+    argocd_version: "{{ tool_versions.argocd }}"
+
+  tasks:
+    # 시스템 업데이트 및 기본 도구 설치
+    - name: Update system packages
+      dnf:
+        name: '*'
+        state: latest
+        update_only: yes
+
+    - name: Install basic tools
+      dnf:
+        name:
+          - git
+          - wget
+          - jq
+          - unzip
+        state: present
+
+    # Docker 설치 및 설정
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    # Java 설치 (Amazon Corretto)
+    - name: Install Amazon Corretto Java
+      dnf:
+        name: "java-{{ java_version }}-amazon-corretto"
+        state: present
+
+    # Jenkins 설치 및 설정
+    - name: Add Jenkins repository
+      get_url:
+        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+
+    - name: Import Jenkins key
+      rpm_key:
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+        state: present
+
+    - name: Install Jenkins
+      dnf:
+        name: jenkins
+        state: present
+
+    - name: Create Jenkins init.groovy.d directory
+      file:
+        path: /var/lib/jenkins/init.groovy.d
+        state: directory
+        owner: jenkins
+        group: jenkins
+
+    # ArgoCD 설치
+    - name: Install kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/v{{ kubectl_version }}/bin/linux/amd64/kubectl"
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
+
+    - name: Install ArgoCD CLI
+      get_url:
+        url: "https://github.com/argoproj/argo-cd/releases/download/{{ argocd_version }}/argocd-linux-amd64"
+        dest: /usr/local/bin/argocd
+        mode: '0755'
+
+    # AWS CLI 설치 (ECR 접근용)
+    - name: Install AWS CLI
+      dnf:
+        name: aws-cli
+        state: present
+
+    # 서비스 시작 및 활성화
+    - name: Start and enable Jenkins
+      systemd:
+        name: jenkins
+        state: started
+        enabled: yes
+
+    # Jenkins 초기 설정을 위한 관리자 비밀번호 저장
+    - name: Get Jenkins initial admin password
+      command: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: jenkins_password
+      changed_when: false
+
+    - name: Store Jenkins password in SSM Parameter Store
+      aws_ssm_parameter_store:
+        name: /gitfolio/jenkins/admin/password
+        value: "{{ jenkins_password.stdout }}"
+        string_type: SecureString
+        region: ap-northeast-2
+
+    # 보안 설정
+    - name: Configure Jenkins security settings
+      template:
+        src: templates/jenkins/security.groovy.j2
+        dest: /var/lib/jenkins/init.groovy.d/security.groovy
+        owner: jenkins
+        group: jenkins
+        mode: '0644'
+
+    # 방화벽 설정
+    - name: Configure firewall for Jenkins
+      firewalld:
+        port: "{{ jenkins_port }}/tcp"
+        permanent: yes
+        state: enabled
+
+    - name: Configure firewall for ArgoCD
+      firewalld:
+        port: "{{ argocd_port }}/tcp"
+        permanent: yes
+        state: enabled

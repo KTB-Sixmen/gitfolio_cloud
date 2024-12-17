@@ -86,5 +86,13 @@
     "Service": "redis",
     "Type": "db",
     "Environment": "shared"
+  },
+  {
+    "Name": "Gitfolio Jenkins",
+    "InstanceId": "i-078d396cb737b751d",
+    "IP": "10.0.107.11",
+    "Service": "jenkins",
+    "Type": "ec2",
+    "Environment": "feature-cicd"
   }
 ]
