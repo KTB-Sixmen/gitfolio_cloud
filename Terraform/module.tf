@@ -15,7 +15,7 @@ module "availability_zones" {
 module "gitfolio_network" {
   source                = "./module/network"
   count                 = local.shared ? 1 : 0
-  
+
   vpc_cidr              = var.vpc_cidr
   public_subnet_cidrs   = var.public_subnet_cidrs
   nat_subnet_cidr       = var.nat_cidr
@@ -132,7 +132,7 @@ module "gitfolio_nosql" {
 
 // ============================================================================================================
 
-// Application Load Balancer
+# // Application Load Balancer
 module "gitfolio_alb" {
   source               = "./module/LB"
   count                = local.shared ? 0 : 1
@@ -148,6 +148,7 @@ module "gitfolio_alb" {
   backend_resume_id    = module.gitfolio_back[1].instance_id
   backend_notification_id = module.gitfolio_back[2].instance_id
   k8s_id               = null#module.gitfolio_k8s[0].instance_id
+  jenkins_id = module.gitfolio_cicd[0].jenkins_instance_id
 
   route53_domain       = var.route53_domain
   lb_type              = var.lb_type
@@ -182,7 +183,7 @@ module "gitfolio_route53" {
 module "gitfolio_ecr" {
   source             = "./module/ECR"
   count              = local.shared ? 8 : 0
-  
+
   ecr_index          = count.index
   ecr_namespace_name = var.ecr_namespace_name
   ecr_repo_name      = var.ecr_repo_name
