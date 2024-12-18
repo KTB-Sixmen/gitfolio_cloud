@@ -1,25 +1,33 @@
 [
   {
+    "Name": "Gitfolio Kubernetes worker node2",
+    "InstanceId": "i-00ff44b9ab9435bc1",
+    "IP": "10.0.103.10",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "dev"
+  },
+  {
     "Name": "Gitfolio Kubernetes master node",
-    "InstanceId": "i-07150d8cd9546a71a",
+    "InstanceId": "i-0f6399bf79cfc60c1",
     "IP": "10.0.103.6",
-    "Service": "k8s_master",
+    "Service": "master",
     "Type": "kubernetes",
     "Environment": "dev"
   },
   {
     "Name": "Gitfolio Kubernetes worker node0",
-    "InstanceId": "i-0985d6e047a7df5be",
+    "InstanceId": "i-05ed2053a92ed4206",
     "IP": "10.0.103.8",
-    "Service": "k8s_worker",
+    "Service": "worker",
     "Type": "kubernetes",
     "Environment": "dev"
   },
   {
     "Name": "Gitfolio Kubernetes worker node1",
-    "InstanceId": "i-0e066a7e4b4ca9381",
+    "InstanceId": "i-0769e9918c5cb0f89",
     "IP": "10.0.103.9",
-    "Service": "k8s_worker",
+    "Service": "worker",
     "Type": "kubernetes",
     "Environment": "dev"
   },
@@ -80,10 +88,18 @@
     "Environment": "feature-cicd"
   },
   {
+    "Name": "Gitfolio ArgoCD",
+    "InstanceId": "i-0d90c5a4633f18ed1",
+    "IP": "10.0.108.124",
+    "Service": "argocd",
+    "Type": "ec2",
+    "Environment": "feature-cicd"
+  },
+  {
     "Name": "Gitfolio DB Master",
     "InstanceId": "i-0d7b378d16aeaf4d8",
     "IP": "10.0.109.14",
-    "Service": "db_master",
+    "Service": "master",
     "Type": "db",
     "Environment": "shared"
   },
@@ -91,7 +107,7 @@
     "Name": "Gitfolio DB Slave1",
     "InstanceId": "i-0212371911693f22b",
     "IP": "10.0.110.38",
-    "Service": "db_slave",
+    "Service": "slave",
     "Type": "db",
     "Environment": "shared"
   },
@@ -99,16 +115,8 @@
     "Name": "Gitfolio DB Slave2",
     "InstanceId": "i-058724ae0f75e2f40",
     "IP": "10.0.110.39",
-    "Service": "db_slave",
+    "Service": "slave",
     "Type": "db",
     "Environment": "shared"
-  },
-  {
-    "Name": "Gitfolio Jenkins",
-    "InstanceId": "i-078d396cb737b751d",
-    "IP": "10.0.107.11",
-    "Service": "jenkins",
-    "Type": "ec2",
-    "Environment": "feature-cicd"
   }
 ]

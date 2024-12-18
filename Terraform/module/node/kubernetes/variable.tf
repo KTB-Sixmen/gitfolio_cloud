@@ -25,7 +25,7 @@ variable "private_ips" {
 
 variable "security_group_ids" {
   description = "Security group IDs"
-  type        = map(string)  
+  type        = map(string)
 }
 
 variable "iam_instance_profile" {
@@ -36,5 +36,5 @@ variable "iam_instance_profile" {
 variable "worker_count" {
   description = "Number of Kubernetes worker nodes"
   type        = number
-  default     = 2
+  default     = 3
 }

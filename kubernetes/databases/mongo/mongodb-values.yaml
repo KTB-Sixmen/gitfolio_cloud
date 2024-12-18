@@ -1,0 +1,55 @@
+global:
+  namespace: gitfolio
+
+architecture: replicaset
+replicaCount: 3
+
+persistence:
+  size: 2Gi
+
+service:
+  type: ClusterIP
+  port: 27017
+
+metrics:
+  enabled: true
+
+primary:
+  persistence:
+    size: 2Gi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: node-role.kubernetes.io/db
+            operator: In
+            values:
+            - ip-10-0-103-8.ap-northeast-2.compute.internal
+
+secondary:
+  persistence:
+    size: 2Gi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: node-role.kubernetes.io/db
+            operator: In
+            values:
+            - ip-10-0-103-8.ap-northeast-2.compute.internal
+
+podAntiAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+  - labelSelector:
+      matchExpressions:
+      - key: app.kubernetes.io/instance
+        operator: In
+        values:
+        - gitfolio-mongo
+      - key: app.kubernetes.io/component
+        operator: In
+        values:
+        - mongodb
+    topologyKey: kubernetes.io/hostname

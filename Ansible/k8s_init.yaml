@@ -12,6 +12,7 @@
           - dnf-plugin-versionlock
           - ca-certificates
           - pip
+          - git
           - containerd
         state: present
 

@@ -1,0 +1,44 @@
+- name: Configure Kubernetes master node
+  hosts: k8s_master
+  tasks:
+    - name: Update kubeadm images
+      shell: |
+        kubeadm config images pull
+
+    - name: Initialize Kubernetes cluster
+      shell: |
+        kubeadm init --apiserver-advertise-address={{ ansible_master_host }} --pod-network-cidr={{ ansible_pod_network_cidr }}
+      args:
+        creates: /etc/kubernetes/admin.conf
+    
+    - name: Create .kube directory
+      file:
+        path: "{{ ansible_home_dir }}/.kube"
+        state: directory
+
+    - name: Copy admin.conf to root's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "{{ ansible_home_dir }}/.kube/config"
+        remote_src: yes
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+
+    - name: Insert tls certificate skip
+      lineinfile:
+        path: "{{ ansible_home_dir }}/.kube/config"
+        insertafter: "^- clusters:"
+        line: "    insecure-skip-tls-verify: true"
+
+    - name: Copy admin.conf to local directory
+      fetch:
+        src: "{{ ansible_home_dir }}/.kube/config"
+        dest: ~/.kube/
+        mode: '0600'
+        flat: yes
+
+    - name: Install Python3 Kubernetes module
+      pip:
+        name: kubernetes
+        state: present
