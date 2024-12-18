@@ -2,11 +2,11 @@
   hosts: k8s_master
   become: no
   tasks:
-    - name: Deploy Helm charts
-      kubernetes.core.helm:
-        kubeconfig: "{{ ansible_home_dir }}/.kube/config"
-        name: "{{ item.name }}"
-        chart_ref: "{{ item.chart_ref }}"
-        release_namespace: "{{ item.namespace }}"
-        create_namespace: true
-      loop: "{{ ansible_helm_charts[5:7] }}"
+  - name: Deploy Helm charts
+    kubernetes.core.helm:
+      kubeconfig: "{{ ansible_home_dir }}/.kube/config"
+      name: "{{ item.name }}"
+      chart_ref: "{{ item.chart_ref }}"
+      release_namespace: "{{ item.namespace }}"
+      create_namespace: true
+    loop: "{{ ansible_helm_charts[5:7] }}"

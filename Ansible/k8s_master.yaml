@@ -24,21 +24,51 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: '0600'
-
-    - name: Insert tls certificate skip
-      lineinfile:
-        path: "{{ ansible_home_dir }}/.kube/config"
-        insertafter: "^- clusters:"
-        line: "    insecure-skip-tls-verify: true"
-
-    - name: Copy admin.conf to local directory
-      fetch:
-        src: "{{ ansible_home_dir }}/.kube/config"
-        dest: ~/.kube/
-        mode: '0600'
-        flat: yes
+    
+    - name: Change default namespace to gitfolio
+      shell: |
+        kubectl config set-context --current --namespace={{ ansible_helm_charts[2].namespace }}
 
     - name: Install Python3 Kubernetes module
       pip:
         name: kubernetes
         state: present
+
+    - name: Copy kube config for local use
+      copy:
+        src: "{{ ansible_home_dir }}/.kube/config"
+        dest: "{{ ansible_home_dir }}/.kube/local"
+        remote_src: yes
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+
+    - name: Insert tls certificate skip
+      lineinfile:
+        path: "{{ ansible_home_dir }}/.kube/local"
+        insertafter: "^.*certificate-authority-data:.*"
+        line: "    insecure-skip-tls-verify: true"
+
+    - name: Erase certificate authority data
+      replace:
+        path: "{{ ansible_home_dir }}/.kube/local"
+        regexp: "^.*certificate-authority-data:.*"
+        replace: '# \g<0>'
+
+    - name: Erase certificate authority data
+      replace:
+        path: "{{ ansible_home_dir }}/.kube/local"
+        regexp: "10.0.103.6"
+        replace: "localhost"
+
+    - name: Copy admin.conf to local directory
+      fetch:
+        src: "{{ ansible_home_dir }}/.kube/temp"
+        dest: ~/.kube/config
+        mode: '0600'
+        flat: yes
+
+    - name: Delete temp config
+      file:
+        path: "{{ ansible_home_dir }}/.kube/temp"
+        state: absent

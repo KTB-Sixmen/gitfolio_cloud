@@ -1,7 +1,7 @@
 [
   {
     "Name": "Gitfolio Kubernetes worker node2",
-    "InstanceId": "i-00ff44b9ab9435bc1",
+    "InstanceId": "i-0f474b49455fbe70d",
     "IP": "10.0.103.10",
     "Service": "worker",
     "Type": "kubernetes",
@@ -9,7 +9,7 @@
   },
   {
     "Name": "Gitfolio Kubernetes master node",
-    "InstanceId": "i-0f6399bf79cfc60c1",
+    "InstanceId": "i-0e732f89c344f8645",
     "IP": "10.0.103.6",
     "Service": "master",
     "Type": "kubernetes",
@@ -17,7 +17,7 @@
   },
   {
     "Name": "Gitfolio Kubernetes worker node0",
-    "InstanceId": "i-05ed2053a92ed4206",
+    "InstanceId": "i-009af119a88119af8",
     "IP": "10.0.103.8",
     "Service": "worker",
     "Type": "kubernetes",
@@ -25,7 +25,7 @@
   },
   {
     "Name": "Gitfolio Kubernetes worker node1",
-    "InstanceId": "i-0769e9918c5cb0f89",
+    "InstanceId": "i-0ceeeb1ef92810699",
     "IP": "10.0.103.9",
     "Service": "worker",
     "Type": "kubernetes",
@@ -84,14 +84,6 @@
     "InstanceId": "i-078d396cb737b751d",
     "IP": "10.0.107.11",
     "Service": "jenkins",
-    "Type": "ec2",
-    "Environment": "feature-cicd"
-  },
-  {
-    "Name": "Gitfolio ArgoCD",
-    "InstanceId": "i-0d90c5a4633f18ed1",
-    "IP": "10.0.108.124",
-    "Service": "argocd",
     "Type": "ec2",
     "Environment": "feature-cicd"
   },
