@@ -50,6 +50,14 @@ resource "aws_security_group" "alb" {
     cidr_blocks = [var.any_ip]
   }
 
+  ingress {
+    description = "Jenkins"
+    from_port = 8080
+    to_port = 8080
+    protocol = "tcp"
+    cidr_blocks = [var.any_ip]
+  }
+
   egress {
     from_port = 0
     to_port = 0

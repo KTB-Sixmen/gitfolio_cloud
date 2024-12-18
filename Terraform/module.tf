@@ -151,6 +151,7 @@ module "gitfolio_alb" {
   backend_resume_id       = module.gitfolio_back[1].instance_id
   backend_notification_id = module.gitfolio_back[2].instance_id
   k8s_id                  = null #module.gitfolio_k8s[0].instance_id
+  jenkins_id = module.gitfolio_cicd[0].jenkins_instance_id
 
   route53_domain     = var.route53_domain
   lb_type            = var.lb_type
