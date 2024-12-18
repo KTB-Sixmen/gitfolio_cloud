@@ -17,9 +17,7 @@ spec:
       nodeSelectorTerms:
       - matchExpressions:
         - key: node-role.kubernetes.io/db
-          operator: In
-          values:
-          - ip-10-0-103-8.ap-northeast-2.compute.internal
+          operator: Exists
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -40,9 +38,7 @@ spec:
       nodeSelectorTerms:
       - matchExpressions:
         - key: node-role.kubernetes.io/db
-          operator: In
-          values:
-          - ip-10-0-103-9.ap-northeast-2.compute.internal
+          operator: Exists
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -63,6 +59,4 @@ spec:
       nodeSelectorTerms:
       - matchExpressions:
         - key: node-role.kubernetes.io/db
-          operator: In
-          values:
-          - ip-10-0-103-10.ap-northeast-2.compute.internal
+          operator: Exists

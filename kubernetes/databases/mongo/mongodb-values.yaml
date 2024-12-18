@@ -1,8 +1,17 @@
 global:
   namespace: gitfolio
 
+image:
+  registry: docker.io
+  repository: bitnami/mongodb
+  tag: 4.4.4-debian-10-r41
+  pullPolicy: IfNotPresent
+
 architecture: replicaset
 replicaCount: 3
+
+arbiter:
+  enabled: false
 
 persistence:
   size: 2Gi
@@ -17,28 +26,26 @@ metrics:
 primary:
   persistence:
     size: 2Gi
+    mountPath: /data/mongodb
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
           - key: node-role.kubernetes.io/db
-            operator: In
-            values:
-            - ip-10-0-103-8.ap-northeast-2.compute.internal
+            operator: Exists
 
 secondary:
   persistence:
     size: 2Gi
+    mountPath: /data/mongodb
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
           - key: node-role.kubernetes.io/db
-            operator: In
-            values:
-            - ip-10-0-103-8.ap-northeast-2.compute.internal
+            operator: Exists
 
 podAntiAffinity:
   requiredDuringSchedulingIgnoredDuringExecution:

@@ -76,7 +76,7 @@ module "gitfolio_ai" {
 
 module "gitfolio_k8s" {
   source = "./module/node/kubernetes"
-  count  = local.shared ? 0 : 0
+  count  = local.shared ? 0 : 1
 
   private_subnet_ids   = data.terraform_remote_state.shared.outputs.private_subnet_ids
   security_group_ids   = data.terraform_remote_state.shared.outputs.security_group_ids
@@ -200,12 +200,12 @@ module "gitfolio_cicd" {
   source = "./module/node/cicd"
   count  = terraform.workspace == "feature-cicd" ? 1 : 0
 
-#   vpc_id             = data.terraform_remote_state.shared.outputs.vpc_id
-  security_group_ids = data.terraform_remote_state.shared.outputs.security_group_ids
-  instance_types     = var.instance_types
-  private_subnet_ids = data.terraform_remote_state.shared.outputs.private_subnet_ids
-  instance_indexes   = var.instance_indexes
-  ami_id            = data.terraform_remote_state.shared.outputs.amazon_linux_id  # AMI ID도 shared에서 가져옵니다
-  private_ips       = var.private_ips
+  #   vpc_id             = data.terraform_remote_state.shared.outputs.vpc_id
+  security_group_ids   = data.terraform_remote_state.shared.outputs.security_group_ids
+  instance_types       = var.instance_types
+  private_subnet_ids   = data.terraform_remote_state.shared.outputs.private_subnet_ids
+  instance_indexes     = var.instance_indexes
+  ami_id               = data.terraform_remote_state.shared.outputs.amazon_linux_id # AMI ID도 shared에서 가져옵니다
+  private_ips          = var.private_ips
   iam_instance_profile = var.iam_instance_profile
 }

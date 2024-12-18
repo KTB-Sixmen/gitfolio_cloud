@@ -2,7 +2,7 @@ resource "aws_instance" "master" {
   ami                    = var.ami_id
   instance_type          = var.instance_types["medium"]
   subnet_id              = var.private_subnet_ids[var.instance_indexes["kubernetes"]]
-  vpc_security_group_ids = [var.security_group_ids["base"], var.security_group_ids["k8s_master"], var.security_group_ids["nosql"]]
+  vpc_security_group_ids = [var.security_group_ids["base"], var.security_group_ids["k8s_master"]]
   private_ip             = var.private_ips["master"]
   iam_instance_profile   = var.iam_instance_profile
 
@@ -20,7 +20,7 @@ resource "aws_instance" "ingress" {
   ami                    = var.ami_id
   instance_type          = var.instance_types["low"]
   subnet_id              = var.private_subnet_ids[var.instance_indexes["kubernetes"]]
-  vpc_security_group_ids = [var.security_group_ids["base"], var.security_group_ids["k8s_worker"]]
+  vpc_security_group_ids = [var.security_group_ids["base"], var.security_group_ids["k8s_worker"], var.security_group_ids["nosql"]]
   private_ip             = var.private_ips["ingress${count.index + 1}"]
   iam_instance_profile   = var.iam_instance_profile
 

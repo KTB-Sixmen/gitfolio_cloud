@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gitfolio-mongo-sc
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Delete  # PVC 삭제 후 PV 보존 여부 (Retain/Delete)
+volumeBindingMode: WaitForFirstConsumer
