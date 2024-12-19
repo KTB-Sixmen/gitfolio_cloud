@@ -122,3 +122,8 @@ variable "k8s_id" {
   description = "ID of k8s master instance"
   type        = string
 }
+# 젠킨스용
+variable "jenkins_id" {
+  description = "ID of k8s jenkins_instance_id instance"
+  type        = string
+}
