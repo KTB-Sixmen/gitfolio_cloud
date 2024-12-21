@@ -110,5 +110,13 @@
     "Service": "jenkins",
     "Type": "ec2",
     "Environment": "feature-cicd"
+  },
+  {
+    "Name": "Gitfolio Argocd",
+    "InstanceId": "i-0d90c5a4633f18ed1",
+    "IP": "10.0.108.124",
+    "Service": "argocd",
+    "Type": "ec2",
+    "Environment": "feature-cicd"
   }
 ]

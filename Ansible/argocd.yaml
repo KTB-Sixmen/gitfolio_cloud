@@ -1,0 +1,68 @@
+---
+- name: Install ArgoCD on Dedicated Instance
+  hosts: argocd
+  become: yes
+  tasks:
+    # 시스템 업데이트 및 기본 패키지 설치
+    - name: Update system packages
+      dnf:
+        name: '*'
+        state: latest
+        update_only: yes
+
+    - name: Install required packages
+      dnf:
+        name:
+          - git
+          - curl
+          - wget
+          - docker
+        state: present
+
+    # Docker 서비스 활성화
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    # ArgoCD CLI 설치
+    - name: Download ArgoCD CLI
+      get_url:
+        url: https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        dest: /usr/local/bin/argocd
+        mode: '0755'
+
+    # ArgoCD 서버 컨테이너 실행
+    - name: Run ArgoCD Server
+      docker_container:
+        name: argocd-server
+        image: quay.io/argoproj/argocd:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "9000:8080"  # HTTP
+          - "9443:8080"  # HTTPS
+        volumes:
+          - /home/ec2-user/argocd:/home/argocd
+        env:
+          ARGOCD_SERVER_INSECURE: "true"  # 개발 환경용, 프로덕션에서는 false로 설정
+
+    # 초기 비밀번호 저장
+    - name: Wait for ArgoCD to be ready
+      wait_for:
+        port: 9000
+        timeout: 300
+
+    - name: Store default admin password
+      aws_ssm_parameter_store:
+        name: /gitfolio/argocd/admin/password
+        value: "admin"  # 기본 비밀번호, 나중에 변경 필요
+        string_type: SecureString
+        region: ap-northeast-2
