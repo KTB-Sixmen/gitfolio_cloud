@@ -79,6 +79,7 @@ services:
         protocol: tcp
     networks:
       - back
+
   zookeeper:
     platform: linux/amd64
     image: zookeeper:3.6
@@ -91,6 +92,7 @@ services:
       - zookeeper_data:/var/lib/zookeeper/data
     networks:
       - back
+
   kafka:
     platform: linux/amd64
     image: confluentinc/cp-kafka:7.4.0
@@ -102,15 +104,32 @@ services:
       - target: 29092
         published: 29092
         protocol: tcp
+    environment:
+      # 브로커 식별자 설정
+      KAFKA_BROKER_ID: 1
+      # 주키퍼 연결 설정 - 컨테이너 이름으로 접근
+      KAFKA_ZOOKEEPER_CONNECT: gitfolio_zookeeper:2181
+      # 리스너 설정 - 내부/외부 통신을 위한 포트 설정
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      # 브로커가 알려줄 리스너 주소 - 실제 접근 가능한 호스트와 포트
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://gitfolio_kafka:29092,EXTERNAL://10.0.105.99:9092
+      # 리스너별 보안 프로토콜 매핑
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      # 브로커 간 통신에 사용할 리스너 이름
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      # 토픽 복제 팩터 설정 (단일 브로커이므로 1로 설정)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
     volumes:
       - kafka_data:/var/lib/kafka/data
     networks:
       - back
+
 volumes:
   zookeeper_data:
   kafka_data:
+
 networks:
   back:
     driver: overlay
