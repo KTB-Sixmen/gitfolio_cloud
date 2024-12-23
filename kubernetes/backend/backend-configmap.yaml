@@ -2,18 +2,18 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: backend-config
-  namespace: gitfolio
+  name: gitfolio-backend-configmap
+  namespace: gitfolio-back
 data:
   # 서비스 URL 설정
   REDIRECT_ONBOARDING_URL: https://www.gitfolio.site/onboarding
   REDIRECT_MAIN_URL: https://www.gitfolio.site/community
   PAYMENT_SUCCESS_REDIRECT_URL: https://www.gitfolio.site/plan/success
 
-  MEMBER_SERVER_URL: http://member-service
-  PAYMENTS_SERVER_URL: http://payment-service
-  NOTIFICATIONS_SERVER_URL: http://notification-service
-  AI_SERVER_URL: http://ai-service
+  MEMBER_SERVER_URL: http://gitfolio-member-service
+  PAYMENTS_SERVER_URL: http://gitfolio-payment-service
+  NOTIFICATIONS_SERVER_URL: http://gitfolio-notification-service
+  AI_SERVER_URL: http://gitfolio-ai-service
 
   # 서비스 포트 설정
   MEMBER_GRPC_PORT: "9090"
@@ -28,10 +28,10 @@ data:
   GH_REDIRECT_URI: https://www.gitfolio.site/login/oauth2/code/github
 
   # REDIS 설정
-  AUTH_REDIS_HOST: http://redis-auth-service
+  AUTH_REDIS_HOST: gitfolio-redis-auth-service
   AUTH_REDIS_PORT: "6379"
 
-  RESUME_REDIS_HOST: http://redis-resume-service
+  RESUME_REDIS_HOST: gitfolio-redis-resume-service
   RESUME_REDIS_PORT: "6379"
 
   # MySQL 설정
@@ -52,15 +52,15 @@ data:
   NOTIFICATION_MYSQL_DB_NAME: gitfolio_notification
 
   # MongoDB 설정
-  MEMBER_MONGO_DB_USERNAME: mongo-member-service
+  MEMBER_MONGO_DB_USERNAME: gitfolio-mongo-member-service
   MEMBER_MONGO_DB_PORT: "27017"
   MEMBER_MONGO_DB_DATABASE: gitfolio_member
 
-  RESUME_MONGO_DB_USERNAME: mongo-resume-service
+  RESUME_MONGO_DB_USERNAME: gitfolio-mongo-resume-service
   RESUME_MONGO_DB_PORT: "27017"
   RESUME_MONGO_DB_DATABASE: gitfolio_resume
 
-  CHAT_MONGO_DB_USERNAME: mongo-chat-service
+  CHAT_MONGO_DB_USERNAME: gitfolio-mongo-chat-service
   CHAT_MONGO_DB_PORT: "27017"
   CHAT_MONGO_DB_DATABASE: gitfolio_chat
 
@@ -71,7 +71,7 @@ data:
   KAKAO_API_URL: https://open-api.kakaopay.com/online/v1/payment
 
   # Kafka 설정
-  KAFKA_HOST1: kafka-service
+  KAFKA_HOST1: gitfolio-kafka-service
   KAFKA_PORT1: "9092"
 
   KAFKA_BROKER_ID: "1"

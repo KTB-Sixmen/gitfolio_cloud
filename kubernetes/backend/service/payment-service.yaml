@@ -1,21 +1,21 @@
-# member-service.yaml
+# payment-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: member-service
-  namespace: gitfolio
+  name: gitfolio-payment-service
+  namespace: gitfolio-back
   labels:
-    app: member
+    app: gitfolio-payment
 spec:
   selector:
-    app: member
+    app: gitfolio-payment
   type: ClusterIP
   ports:
     - name: http
-      port: 81            # 파드가 개방하는 포트
+      port: 80            # 파드가 개방하는 포트
       targetPort: 8080    # 앱이 리스닝하는 포트 
       protocol: TCP
     - name: https
-      port: 444
+      port: 443
       targetPort: 8080
       protocol: TCP

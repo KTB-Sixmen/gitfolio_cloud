@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zookeeper-deployment
-  namespace: gitfolio
+  name: gitfolio-zookeeper-deployment
+  namespace: gitfolio-back
   labels:
-    app: zookeeper
+    app: gitfolio-zookeeper
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: zookeeper
+      app: gitfolio-zookeeper
   template:
     metadata:
       labels:
-        app: zookeeper
+        app: gitfolio-zookeeper
     spec:
       containers:
-        - name: zookeeper
+        - name: gitfolio-zookeeper
           image: zookeeper:3.6
           ports:
             - name: kafka1

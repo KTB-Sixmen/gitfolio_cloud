@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka-service
-  namespace: gitfolio
+  name: gitfolio-kafka-service
+  namespace: gitfolio-back
   labels:
-    app: kafka
+    app: gitfolio-kafka
 spec:
   selector:
-    app: kafka
+    app: gitfolio-kafka
   type: ClusterIP
   ports:
     - name: kafka1
@@ -18,4 +18,4 @@ spec:
     - name: kafka2
       port: 29092
       targetPort: 29092
-      portocol: TCP
+      protocol: TCP

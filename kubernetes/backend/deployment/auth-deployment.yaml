@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-deployment
-  namespace: gitfolio
+  name: gitfolio-auth-deployment
+  namespace: gitfolio-back
   labels:
-    app: auth
+    app: gitfolio-auth
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: auth
+      app: gitfolio-auth
   template:
     metadata:
       labels:
-        app: auth
+        app: gitfolio-auth
     spec:
       containers:
-        - name: auth
+        - name: gitfolio-auth
           image: aida0/gitfolio_auth:test
           ports:
             - containerPort: 8080

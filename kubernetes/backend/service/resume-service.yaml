@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: resume-service
-  namespace: gitfolio
+  name: gitfolio-resume-service
+  namespace: gitfolio-back
   labels:
-    app: resume
+    app: gitfolio-resume
 spec:
   selector:
-    app: resume
+    app: gitfolio-resume
   type: ClusterIP
   ports:
     - name: http

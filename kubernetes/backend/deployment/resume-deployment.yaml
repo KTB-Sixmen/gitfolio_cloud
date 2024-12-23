@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: resume-deployment
-  namespace: gitfolio
+  name: gitfolio-resume-deployment
+  namespace: gitfolio-back
   labels:
-    app: resume
+    app: gitfolio-resume
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: resume
+      app: gitfolio-resume
   template:
     metadata:
       labels:
-        app: resume
+        app: gitfolio-resume
     spec:
       containers:
-        - name: resume
+        - name: gitfolio-resume
           image: aida0/gitfolio_resume:test
           ports:
             - containerPort: 8080

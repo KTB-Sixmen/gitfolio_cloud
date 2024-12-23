@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-deployment
-  namespace: gitfolio
+  name: gitfolio-kafka-deployment
+  namespace: gitfolio-back
   labels:
-    app: kafka
+    app: gitfolio-kafka
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: kafka
+      app: gitfolio-kafka
   template:
     metadata:
       labels:
-        app: kafka
+        app: gitfolio-kafka
     spec:
       containers:
-        - name: kafka
+        - name: gitfolio-kafka
           image: confluentinc/cp-kafka:7.4.0
           ports:
             - name: kafka1

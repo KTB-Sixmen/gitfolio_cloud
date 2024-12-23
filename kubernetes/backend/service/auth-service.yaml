@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-service
-  namespace: gitfolio
+  name: gitfolio-auth-service
+  namespace: gitfolio-back
   labels:
-    app: auth
+    app: gitfolio-auth
 spec:
   selector:
-    app: auth
+    app: gitfolio-auth
   type: ClusterIP
   ports:
     - name: http

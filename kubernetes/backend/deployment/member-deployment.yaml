@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: member-deployment
-  namespace: gitfolio
+  name: gitfolio-member-deployment
+  namespace: gitfolio-back
   labels:
-    app: member
+    app: gitfolio-member
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: member
+      app: gitfolio-member
   template:
     metadata:
       labels:
-        app: member
+        app: gitfolio-member
     spec:
       containers:
-        - name: member
+        - name: gitfolio-member
           image: aida0/gitfolio_member:test
           ports:
             - containerPort: 8080

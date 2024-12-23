@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-deployment    # 배포 이름으로 payment-deployment 사용
-  namespace: gitfolio
+  name: gitfolio-payment-deployment    # 배포 이름으로 payment-deployment 사용
+  namespace: gitfolio-back
   labels:
-    app: payment             # payment 서비스임을 나타내는 레이블
+    app: gitfolio-payment             # payment 서비스임을 나타내는 레이블
 spec:
   replicas: 3                # 고가용성을 위한 2개의 복제본
   selector:
     matchLabels:
-      app: payment           # payment 레이블을 가진 파드 선택
+      app: gitfolio-payment           # payment 레이블을 가진 파드 선택
   template:
     metadata:
       labels:
-        app: payment
+        app: gitfolio-payment
     spec:
       containers:
-        - name: payment
+        - name: gitfolio-payment
           image: aida0/gitfolio_payment:test  # Docker Hub의 payment 서비스 이미지
           ports:
             - containerPort: 8080               # 애플리케이션의 포트

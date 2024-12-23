@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zookeeper-service
-  namespace: gitfolio
+  name: gitfolio-zookeeper-service
+  namespace: gitfolio-back
   labels:
-    app: zookeeper
+    app: gitfolio-zookeeper
 spec:
   selector:
-    app: zookeeper
+    app: gitfolio-zookeeper
   type: ClusterIP
   ports:
     - name: zookeeper

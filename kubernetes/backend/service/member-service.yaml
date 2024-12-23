@@ -1,14 +1,14 @@
-# notification-service.yaml
+# member-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: notification-service
-  namespace: gitfolio
+  name: gitfolio-member-service
+  namespace: gitfolio-back
   labels:
-    app: notification
+    app: gitfolio-member
 spec:
   selector:
-    app: notification
+    app: gitfolio-member
   type: ClusterIP
   ports:
     - name: http
