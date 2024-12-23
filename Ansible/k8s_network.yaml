@@ -1,4 +1,4 @@
-- name: Configure Kubernetes master node
+- name: Configure Kubernetes network
   hosts: helm
   tasks:
     - name: Download Helm install script
@@ -26,6 +26,59 @@
         chart_ref: "{{ ansible_helm_charts[0].chart_ref }}"
         release_namespace: "{{ ansible_helm_charts[0].namespace }}"
         create_namespace: true
+
+    - name: Create namespace for {{ ansible_helm_charts[2].namespace }}
+      kubernetes.core.k8s:
+        kubeconfig: "{{ ansible_home_dir }}/.kube/config"
+        name: "{{ ansible_helm_charts[2].namespace }}"
+        api_version: v1
+        kind: Namespace
+        state: present
+    
+    - name: Change default namespace to gitfolio
+      shell: |
+        kubectl config set-context --current --namespace={{ ansible_helm_charts[2].namespace }}
+      environment:
+        KUBECONFIG: "{{ ansible_home_dir }}/.kube/config"
+
+    - name: Copy kube config for local use
+      copy:
+        src: "{{ ansible_home_dir }}/.kube/config"
+        dest: "{{ ansible_home_dir }}/.kube/local"
+        remote_src: yes
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+
+    - name: Insert tls certificate skip
+      lineinfile:
+        path: "{{ ansible_home_dir }}/.kube/local"
+        insertafter: "^.*certificate-authority-data:.*"
+        line: "    insecure-skip-tls-verify: true"
+
+    - name: Erase certificate authority data
+      replace:
+        path: "{{ ansible_home_dir }}/.kube/local"
+        regexp: "^.*certificate-authority-data:.*"
+        replace: '# \g<0>'
+
+    - name: Change kubernetes api server address
+      replace:
+        path: "{{ ansible_home_dir }}/.kube/local"
+        regexp: "10.0.4.5"
+        replace: "localhost"
+
+    - name: Copy kubernetes config to local directory
+      fetch:
+        src: "{{ ansible_home_dir }}/.kube/local"
+        dest: ~/.kube/config
+        mode: '0600'
+        flat: yes
+
+    - name: Delete temp config
+      file:
+        path: "{{ ansible_home_dir }}/.kube/local"
+        state: absent
 
     # - name: Deploy Helm charts
     #   become: no
