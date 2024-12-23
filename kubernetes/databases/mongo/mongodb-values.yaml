@@ -1,12 +1,3 @@
-global:
-  namespace: gitfolio
-
-image:
-  registry: docker.io
-  repository: bitnami/mongodb
-  tag: 4.4.4-debian-10-r41
-  pullPolicy: IfNotPresent
-
 architecture: replicaset
 replicaCount: 3
 
@@ -14,49 +5,70 @@ arbiter:
   enabled: false
 
 persistence:
+  enabled: true
+  storageClass: gitfolio-mongo-sc
+  accessModes:
+    - ReadWriteOnce
   size: 2Gi
 
 service:
   type: ClusterIP
   port: 27017
 
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "10254"
+
 metrics:
   enabled: true
+  service:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "10254"
 
-primary:
-  persistence:
-    size: 2Gi
-    mountPath: /data/mongodb
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
+serviceMonitor:
+  enabled: true
+  namespace: gitfolio
+
+podSecurityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+  runAsGroup: 1001
+  fsGroupChangePolicy: "OnRootMismatch"
+
+containerSecurityContext:
+  enabled: true
+  runAsUser: 1001
+  runAsGroup: 1001
+  runAsNonRoot: true
+  privileged: false
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: false
+
+volmePermission:
+  enabled: true
+  securityContext:
+    runAsUser: 0
+    runAsNonRoot: false
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+          - key: app.kubernetes.io/instance
+            operator: In
+            values:
+            - gitfolio-mongo
+          - key: app.kubernetes.io/component
+            operator: In
+            values:
+            - mongodb
+      topologyKey: kubernetes.io/hostname
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
         - matchExpressions:
           - key: node-role.kubernetes.io/db
             operator: Exists
-
-secondary:
-  persistence:
-    size: 2Gi
-    mountPath: /data/mongodb
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: node-role.kubernetes.io/db
-            operator: Exists
-
-podAntiAffinity:
-  requiredDuringSchedulingIgnoredDuringExecution:
-  - labelSelector:
-      matchExpressions:
-      - key: app.kubernetes.io/instance
-        operator: In
-        values:
-        - gitfolio-mongo
-      - key: app.kubernetes.io/component
-        operator: In
-        values:
-        - mongodb
-    topologyKey: kubernetes.io/hostname
