@@ -1,15 +1,15 @@
 - hosts: back3
   tasks:
-  - name: Write docker-compose.yaml
-    template:
-      src: docker-compose.notification.yaml.j2
-      dest: "{{ ansible_home_dir }}/docker-compose.yaml"
-
-  - name: Initialize Docker Swarm
-    shell: docker swarm init
-    ignore_errors: yes
-
-  - name: Start docker-compose.yaml
-    shell: docker-compose up -d
-    args:
-      chdir: "{{ ansible_home_dir }}"
+    - name: Write docker-compose.yaml
+      template:
+        src: docker-compose.notification.yaml.j2
+        dest: "{{ ansible_home_dir }}/docker-compose.yaml"
+  
+    - name: Initialize Docker Swarm
+      shell: docker swarm init
+      ignore_errors: yes
+  
+    - name: Start docker-compose.yaml
+      shell: docker-compose up -d
+      args:
+        chdir: "{{ ansible_home_dir }}"

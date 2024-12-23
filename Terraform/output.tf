@@ -32,7 +32,8 @@ output "nosql_id" {
   description = "ID of the NoSQL instance"
   value       = local.shared ? module.gitfolio_nosql[*].nosql_id : null
 }
-output "jenkins_instance_id" {
-  description = "The ID of the Jenkins EC2 instance"
-  value       = terraform.workspace == "feature-cicd" ? module.gitfolio_cicd[0].jenkins_instance_id : null
+
+output "listener_arn" {
+  description = "ARN of the https listener"
+  value       = local.dev ? module.gitfolio_alb_dev[0].listener_arn : null
 }

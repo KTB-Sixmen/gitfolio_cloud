@@ -1,36 +1,60 @@
-- hosts: all
+- hosts: dev
   gather_facts: yes
   tasks:
-  - name: Install environment
-    dnf:
-      name:
-        - docker
-        - pip
-      state: latest
+    - name: Input shell color script(root)
+      lineinfile:
+        path: ~/.bashrc
+        line: "{{ item.line }}"
+        insertafter: EOF
+      loop:
+        - line: export PS1="{{ ansible_shell_color }}"
+        - line: alias ls='ls --color=auto'
+        - line: alias ll='ls -al --color=auto'
+        
+    - name: Input shell color script(user)
+      lineinfile:
+        path: "{{ ansible_home_dir }}/.bashrc"
+        line: "{{ item.line }}"
+        insertafter: EOF
+      loop:
+        - line: export PS1="{{ ansible_shell_color }}"
+        - line: alias ls='ls --color=auto'
+        - line: alias ll='ls -al --color=auto'   
 
-  - name: Change Docker group
-    user:
-      name: ec2-user
-      groups: docker
-      append: yes
+    - name: Change shell color
+      shell: |
+        source ~/.bashrc
+        source {{ ansible_home_dir }}/.bashrc
+    - name: Install environment
+      dnf:
+        name:
+          - docker
+          - pip
+        state: latest
 
-  - name: Start Docker
-    systemd:
-      name: docker
-      state: started
+    - name: Change Docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
 
-  - name: Install docker-compose
-    get_url:
-      url: https://github.com/docker/compose/releases/latest/download/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
-      dest: /usr/local/bin/docker-compose
-      mode: '0755'
-      force: yes
+    - name: Start Docker
+      systemd:
+        name: docker
+        state: started
 
-  - name: Add docker-compose execution permission
-    shell: chmod +x /usr/local/bin/docker-compose
-  
-  - name: Restart Docker
-    systemd:
-      name: docker
-      state: restarted
-      enabled: yes
+    - name: Install docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/latest/download/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+        force: yes
+
+    - name: Add docker-compose execution permission
+      shell: chmod +x /usr/local/bin/docker-compose
+
+    - name: Restart Docker
+      systemd:
+        name: docker
+        state: restarted
+        enabled: yes

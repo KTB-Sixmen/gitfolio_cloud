@@ -1,0 +1,21 @@
+# kafka-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitfolio-kafka-service
+  namespace: gitfolio-back
+  labels:
+    app: gitfolio-kafka
+spec:
+  selector:
+    app: gitfolio-kafka
+  type: ClusterIP
+  ports:
+    - name: kafka1
+      port: 9092          # 파드가 개방하는 포트
+      targetPort: 9092    # 앱이 리스닝하는 포트 
+      protocol: TCP
+    - name: kafka2
+      port: 29092
+      targetPort: 29092
+      protocol: TCP

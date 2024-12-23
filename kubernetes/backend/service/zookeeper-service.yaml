@@ -1,0 +1,17 @@
+# zookeeper-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitfolio-zookeeper-service
+  namespace: gitfolio-back
+  labels:
+    app: gitfolio-zookeeper
+spec:
+  selector:
+    app: gitfolio-zookeeper
+  type: ClusterIP
+  ports:
+    - name: zookeeper
+      port: 2181          # 파드가 개방하는 포트
+      targetPort: 2181    # 앱이 리스닝하는 포트 
+      protocol: TCP

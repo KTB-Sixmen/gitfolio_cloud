@@ -9,6 +9,16 @@
         state: latest
         update_only: yes
 
+    # Jenkins 설치 및 설정
+    - name: Add Jenkins repository
+      yum_repository:
+        name: jenkins
+        description: Jenkins
+        baseurl: "{{ ansible_jenkins_repo_url }}.repo"
+        gpgkey: "{{ ansible_jenkins_repo_url }}.io.key"
+        gpgcheck: yes
+        enabled: yes
+
     - name: Install Environment 
       dnf:
         name:
@@ -17,6 +27,8 @@
           - jq
           - unzip
           - docker
+          - java-{{ ansible_cicd_tools_version.java }}
+          - jenkins-{{ ansible_cicd_tools_version.jenkins }}
         state: present
 
     - name: Start and enable Docker service
@@ -31,57 +43,6 @@
         groups: docker
         append: yes
 
-    # Java 설치 (Amazon Corretto)
-    - name: Install Amazon Corretto Java
-      dnf:
-        name: "java-{{ ansible_cicd_tools_version.java }}"
-        state: present
-
-    # Jenkins 설치 및 설정
-    - name: Add Jenkins repository
-      yum_repository:
-        name: jenkins
-        description: Jenkins
-        baseurl: "{{ ansible_jenkins_repo_url }}.repo"
-        gpgkey: "{{ ansible_jenkins_repo_url }}.io.key"
-        gpgcheck: yes
-        enabled: yes
-
-    - name: Install Jenkins
-      dnf:
-        name:
-          - jenkins
-        state: present
-
-    - name: Create Jenkins init.groovy.d directory
-      file:
-        path: /var/lib/jenkins/init.groovy.d
-        state: directory
-        owner: jenkins
-        group: jenkins
-
-    # ArgoCD 설치
-    - name: Add Kubernetes repo
-      yum_repository:
-        name: kubernetes
-        description: Kubernetes
-        baseurl: "{{ ansible_kubernetes_repo_url }}"
-        gpgkey: "{{ ansible_kubernetes_repo_url }}/repodata/repomd.xml.key"
-        gpgcheck: yes
-        enabled: yes
-        exclude: 
-          - kubelet
-          - kubeadm
-          - kubectl
-          - cri-tools
-          - kubernetes-cni
-
-    - name: Install ArgoCD CLI
-      get_url:
-        url: "https://github.com/argoproj/argo-cd/releases/download/{{ ansible_cicd_tools_version.argocd }}/argocd-linux-amd64"
-        dest: /usr/local/bin/argocd
-        mode: '0755'
-
     # 서비스 시작 및 활성화
     - name: Start and enable Jenkins
       systemd:
@@ -89,25 +50,47 @@
         state: started
         enabled: yes
 
-    # Jenkins 초기 설정을 위한 관리자 비밀번호 저장
-    - name: Get Jenkins initial admin password
-      shell: |
-        cat /var/lib/jenkins/secrets/initialAdminPassword
-      register: jenkins_password
-      changed_when: false
+    # # ArgoCD 설치
+    # - name: Add Kubernetes repo
+    #   yum_repository:
+    #     name: kubernetes
+    #     description: Kubernetes
+    #     baseurl: "{{ ansible_kubernetes_repo_url }}"
+    #     gpgkey: "{{ ansible_kubernetes_repo_url }}/repodata/repomd.xml.key"
+    #     gpgcheck: yes
+    #     enabled: yes
+    #     exclude: 
+    #       - kubelet
+    #       - kubeadm
+    #       - kubectl
+    #       - cri-tools
+    #       - kubernetes-cni
 
-    - name: Store Jenkins password in SSM Parameter Store
-      aws_ssm_parameter_store:
-        name: /gitfolio/jenkins/admin/password
-        value: "{{ jenkins_password.stdout }}"
-        string_type: SecureString
-        region: ap-northeast-2
+    # - name: Install ArgoCD CLI
+    #   get_url:
+    #     url: "https://github.com/argoproj/argo-cd/releases/download/{{ ansible_cicd_tools_version.argocd }}/argocd-linux-amd64"
+    #     dest: /usr/local/bin/argocd
+    #     mode: '0755'
 
-    # 보안 설정
-    - name: Configure Jenkins security settings
-      template:
-        src: templates/jenkins/security.groovy.j2
-        dest: /var/lib/jenkins/init.groovy.d/security.groovy
-        owner: jenkins
-        group: jenkins
-        mode: '0644'
+    # # Jenkins 초기 설정을 위한 관리자 비밀번호 저장
+    # - name: Get Jenkins initial admin password
+    #   shell: |
+    #     cat /var/lib/jenkins/secrets/initialAdminPassword
+    #   register: jenkins_password
+    #   changed_when: false
+
+    # - name: Store Jenkins password in SSM Parameter Store
+    #   aws_ssm_parameter_store:
+    #     name: /gitfolio/jenkins/admin/password
+    #     value: "{{ jenkins_password.stdout }}"
+    #     string_type: SecureString
+    #     region: ap-northeast-2
+
+    # # 보안 설정
+    # - name: Configure Jenkins security settings
+    #   template:
+    #     src: templates/jenkins/security.groovy.j2
+    #     dest: /var/lib/jenkins/init.groovy.d/security.groovy
+    #     owner: jenkins
+    #     group: jenkins
+    #     mode: '0644'

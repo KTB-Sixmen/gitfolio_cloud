@@ -1,35 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ai-deployment
-  namespace: gitfolio
+  name: gitfolio-ai-deployment
+  namespace: gitfolio-ai
   labels:
-    app: ai
+    app: gitfolio-ai
 spec:
   replicas: 3  # 고가용성을 위해 2개의 레플리카 설정
   selector:
     matchLabels:
-      app: ai
+      app: gitfolio-ai
   template:
     metadata:
       labels:
-        app: ai
+        app: gitfolio-ai
     spec:
+      imagePullSecrets:
+        - name: gitfolio-container-registry
       containers:
-        - name: ai
-          image: aida0/gitfolio_ai:test
+        - name: gitfolio-ai
+          image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/ai:prod
           ports:
             - containerPort: 8000
-          envFrom:
-            - configMapRef:
-                name: ai-configmap
-            - secretRef:
-                name: ai-secret
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "200m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
+          # envFrom:
+          #   - configMapRef:
+          #       name: gitfolio-ai-configmap
+          #   - secretRef:
+          #       name: gitfolio-ai-secret
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "200m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"
 #추후 헬스체크 추가시 구현필요
