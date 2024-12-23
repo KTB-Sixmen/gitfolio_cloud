@@ -68,11 +68,6 @@ variable "rds_subnet_group_name" {
   type        = string
 }
 
-variable "multi_az" {
-  description = "Enable multi-AZ"
-  type        = bool
-}
-
 variable "backup_period" {
   description = "Backup retention period"
   type        = number
