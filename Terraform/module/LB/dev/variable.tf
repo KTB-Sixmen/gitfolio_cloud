@@ -8,6 +8,11 @@ variable "public_subnet_ids" {
   type        = list(string)
 }
 
+variable "security_group_ids" {
+  description = "IDs of the security groups"
+  type        = map(string)
+}
+
 variable "any_ip" {
   description = "IP address for anywhere"
   type        = string
@@ -118,10 +123,6 @@ variable "redis_id" {
   type        = string
 }
 
-variable "k8s_id" {
-  description = "ID of k8s master instance"
-  type        = string
-}
 # 젠킨스용
 variable "jenkins_id" {
   description = "ID of k8s jenkins_instance_id instance"

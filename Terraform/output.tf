@@ -32,3 +32,8 @@ output "nosql_id" {
   description = "ID of the NoSQL instance"
   value       = local.shared ? module.gitfolio_nosql[*].nosql_id : null
 }
+
+output "listener_arn" {
+  description = "ARN of the https listener"
+  value       = local.dev ? module.gitfolio_alb_dev[0].listener_arn : null
+}
