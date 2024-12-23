@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: front-service
-  namespace: gitfolio
+  name: gitfolio-front-service
+  namespace: gitfolio-front
   labels:
-    app: front
+    app: gitfolio-front
 spec:
   selector:
-    app: front
+    app: gitfolio-front
   type: ClusterIP
   ports:
     - name: http
