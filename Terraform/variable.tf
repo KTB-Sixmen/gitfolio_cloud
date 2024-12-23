@@ -24,11 +24,6 @@ variable "nosql_private_ips" {
   type        = map(string)
 }
 
-variable "elastic_ip_names" {
-  description = "Elastic IPs for public subnets"
-  type        = map(string)
-}
-
 variable "any_ip" {
   description = "IP address for anywhere"
   type        = string
