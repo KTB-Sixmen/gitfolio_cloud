@@ -1,13 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-auth-service    # ConfigMap에 정의된 AUTH_REDIS_HOST와 일치
-  namespace: gitfolio
+  name: gitfolio-redis-auth-service    # ConfigMap에 정의된 AUTH_REDIS_HOST와 일치
+  namespace: gitfolio-redis
   labels:
-    app: redis
+    app.kubernetes.io/component: node
+    app.kubernetes.io/instance: gitfolio-redis
+    app.kubernetes.io/name: redis
 spec:
   selector:
-    app: redis
+    app.kubernetes.io/component: node
+    app.kubernetes.io/instance: gitfolio-redis
+    app.kubernetes.io/name: redis
   type: ClusterIP
   ports:
     - name: redis
@@ -19,13 +23,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-resume-service  # ConfigMap에 정의된 RESUME_REDIS_HOST와 일치
-  namespace: gitfolio
+  name: gitfolio-redis-resume-service  # ConfigMap에 정의된 RESUME_REDIS_HOST와 일치
+  namespace: gitfolio-redis
   labels:
-    app: redis
+    app.kubernetes.io/component: node
+    app.kubernetes.io/instance: gitfolio-redis
+    app.kubernetes.io/name: redis
 spec:
   selector:
-    app: redis
+    app.kubernetes.io/component: node
+    app.kubernetes.io/instance: gitfolio-redis
+    app.kubernetes.io/name: redis
   type: ClusterIP
   ports:
     - name: redis
