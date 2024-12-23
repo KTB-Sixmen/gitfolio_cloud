@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitfolio-auth-deployment
+  namespace: gitfolio-back
+  labels:
+    app: gitfolio-auth
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gitfolio-auth
+  template:
+    metadata:
+      labels:
+        app: gitfolio-auth
+    spec:
+      containers:
+        - name: gitfolio-auth
+          image: aida0/gitfolio_auth:test
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: backend-configmap
+            - secretRef:
+                name: backend-secret
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "200m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"

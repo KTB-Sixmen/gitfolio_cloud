@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitfolio-member-deployment
+  namespace: gitfolio-back
+  labels:
+    app: gitfolio-member
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gitfolio-member
+  template:
+    metadata:
+      labels:
+        app: gitfolio-member
+    spec:
+      containers:
+        - name: gitfolio-member
+          image: aida0/gitfolio_member:test
+          ports:
+            - containerPort: 8080
+            - containerPort: 9090
+          envFrom:
+            - configMapRef:
+                name: backend-configmap
+            - secretRef:
+                name: backend-secret
+          # resources:
+          #   requests:
+          #     memory: "512Mi"
+          #     cpu: "300m"
+          #   limits:
+          #     memory: "1Gi"
+          #     cpu: "600m"

@@ -24,11 +24,6 @@ variable "nosql_private_ips" {
   type        = map(string)
 }
 
-variable "elastic_ip_names" {
-  description = "Elastic IPs for public subnets"
-  type        = map(string)
-}
-
 variable "any_ip" {
   description = "IP address for anywhere"
   type        = string
@@ -109,11 +104,6 @@ variable "db_username" {
 variable "db_password" {
   description = "Database password"
   type        = string
-}
-
-variable "multi_az" {
-  description = "Enable multi-AZ"
-  type        = bool
 }
 
 variable "backup_period" {

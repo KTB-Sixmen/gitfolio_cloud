@@ -3,22 +3,24 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: gitfolio-ingress     # 배포 이름으로 ingress-deployment 사용
+  namespace: gitfolio-ingress
   annotations:
+    kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
 spec:
   ingressClassName: nginx
   rules:
-  - host: gitfolio.site
+  - host: www.gitfolio.site
     http:
       paths:
-      # 프런트엔드 서비스
+    # 프런트엔드 서비스
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: front-service
+            name: gitfolio-front-service
             port:
               number: 80
       # 인증 서비스
@@ -26,14 +28,14 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: auth-service
+            name: gitfolio-auth-service
             port:
               number: 80
       - path: /api/auth(/.*)?
         pathType: Prefix
         backend:
           service:
-            name: auth-service
+            name: gitfolio-auth-service
             port:
               number: 80
       # 멤버 서비스
@@ -41,7 +43,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: member-service
+            name: gitfolio-member-service
             port:
               number: 81
       # 채팅 서비스
@@ -49,7 +51,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: chat-service
+            name: gitfolio-chat-service
             port:
               number: 82
       # 이력서 서비스
@@ -57,7 +59,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: ai-service
+            name: gitfolio-ai-service
             port:
               number: 80
       # 결제 서비스
@@ -65,7 +67,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: payment-service
+            name: gitfolio-payment-service
             port:
               number: 81
       # 알림 서비스
@@ -73,7 +75,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: notification-service
+            name: gitfolio-notification-service
             port:
               number: 80
       # AI 서비스
@@ -81,18 +83,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: ai-service
-            port:
-              number: 80
-
-  - host: dev.gitfolio.site
-    http:
-      paths:
-      # AI Swagger
-      - path: /(docs | openapi.json)
-        pathType: Prefix
-        backend:
-          service:
-            name: ai-service
+            name: gitfolio-ai-service
             port:
               number: 80

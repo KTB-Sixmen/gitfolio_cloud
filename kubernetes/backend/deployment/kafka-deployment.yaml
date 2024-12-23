@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitfolio-kafka-deployment
+  namespace: gitfolio-back
+  labels:
+    app: gitfolio-kafka
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gitfolio-kafka
+  template:
+    metadata:
+      labels:
+        app: gitfolio-kafka
+    spec:
+      containers:
+        - name: gitfolio-kafka
+          image: confluentinc/cp-kafka:7.4.0
+          ports:
+            - name: kafka1
+              containerPort: 9092
+            - name: kafka2
+              containerPort: 29092
+          envFrom:
+            - configMapRef:
+                name: backend-configmap

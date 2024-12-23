@@ -18,14 +18,14 @@ variable "ami_id" {
   type        = string
 }
 
-variable "private_ips" {
-  description = "Private IPs for subnets"
-  type        = map(string)
+variable "private_ip" {
+  description = "Private IP for subnet"
+  type        = string
 }
 
 variable "security_group_ids" {
   description = "Security group IDs"
-  type        = map(string)  
+  type        = list(string)
 }
 
 variable "iam_instance_profile" {
@@ -36,5 +36,10 @@ variable "iam_instance_profile" {
 variable "worker_count" {
   description = "Number of Kubernetes worker nodes"
   type        = number
-  default     = 2
+  default     = 3
+}
+
+variable "tags" {
+  description = "Tags for the EC2 instances"
+  type        = map(string)
 }
