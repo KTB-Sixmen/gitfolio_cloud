@@ -1,0 +1,136 @@
+# 1번 모듈
+services:
+  auth:
+    platform: linux/amd64
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/auth:dev
+    container_name: gitfolio_auth
+    ports:
+      - target: 8080
+        published: 80
+        protocol: tcp
+      - target: 8080
+        published: 443
+        protocol: tcp
+    networks:
+      - back
+  member:
+    platform: linux/amd64
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/member:dev
+    container_name: gitfolio_member
+    ports:
+      - target: 8080
+        published: 81
+        protocol: tcp
+      - target: 8080
+        published: 444
+        protocol: tcp
+    networks:
+      - back
+networks:
+  back:
+    driver: bridge
+    attachable: true
+
+#2번 모듈
+services:
+  resume:
+    platform: linux/amd64
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/resume:dev
+    container_name: gitfolio_resume
+    ports:
+      - target: 8080
+        published: 80
+        protocol: tcp
+      - target: 8080
+        published: 443
+        protocol: tcp
+    networks:
+      - back
+  payment:
+    platform: linux/amd64
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/payment:dev
+    container_name: gitfolio_payment
+    ports:
+      - target: 8080
+        published: 81
+        protocol: tcp
+      - target: 8080
+        published: 444
+        protocol: tcp
+    networks:
+      - back
+networks:
+  back:
+    driver: overlay
+    attachable: true
+
+#3번모듈
+services:
+  notification:
+    platform: linux/amd64
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/notification:dev
+    container_name: gitfolio_notification
+    ports:
+      - target: 8080
+        published: 80
+        protocol: tcp
+      - target: 8080
+        published: 443
+        protocol: tcp
+    networks:
+      - back
+
+  zookeeper:
+    platform: linux/amd64
+    image: zookeeper:3.6
+    container_name: gitfolio_zookeeper
+    ports:
+      - target: 2181
+        published: 2181
+        protocol: tcp
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+    networks:
+      - back
+
+  kafka:
+    platform: linux/amd64
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: gitfolio_kafka
+    ports:
+      - target: 9092
+        published: 9092
+        protocol: tcp
+      - target: 29092
+        published: 29092
+        protocol: tcp
+    environment:
+      # 브로커 식별자 설정
+      KAFKA_BROKER_ID: 1
+      # 주키퍼 연결 설정 - 컨테이너 이름으로 접근
+      KAFKA_ZOOKEEPER_CONNECT: gitfolio_zookeeper:2181
+      # 리스너 설정 - 내부/외부 통신을 위한 포트 설정
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      # 브로커가 알려줄 리스너 주소 - 실제 접근 가능한 호스트와 포트
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://gitfolio_kafka:29092,EXTERNAL://10.0.105.99:9092
+      # 리스너별 보안 프로토콜 매핑
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      # 브로커 간 통신에 사용할 리스너 이름
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      # 토픽 복제 팩터 설정 (단일 브로커이므로 1로 설정)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - back
+
+volumes:
+  zookeeper_data:
+  kafka_data:
+
+networks:
+  back:
+    driver: overlay
+    attachable: true
