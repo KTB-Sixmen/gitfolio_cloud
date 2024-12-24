@@ -1,0 +1,14 @@
+services:
+  frontend:
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/front:dev
+    ports:
+      - target: 3000
+        published: 80
+        protocol: tcp
+      - target: 3000
+        published: 443
+        protocol: tcp
