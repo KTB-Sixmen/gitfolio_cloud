@@ -1,7 +1,7 @@
 services:
   {{ ansible_host_namespace }}:
     platform: linux/amd64
-    image: aida0/gitfolio_{{ ansible_host_namespace }}:test
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/{{ ansible_host_namespace }}:dev
     container_name: gitfolio_{{ ansible_host_namespace }}
     ports:
       - target: {{ ansible_host_port }}
@@ -10,6 +10,8 @@ services:
       - target: {{ ansible_host_port }}
         published: 443
         protocol: tcp
+    env_file:
+      - .env
     networks:
       - {{ ansible_network_namespace }}
       

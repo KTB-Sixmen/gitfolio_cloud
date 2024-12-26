@@ -1,7 +1,7 @@
 services:
   {{ ansible_host_namespace1 }}:
     platform: linux/amd64
-    image: aida0/gitfolio_{{ ansible_host_namespace1 }}:test
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/{{ ansible_host_namespace1 }}:dev
     container_name: gitfolio_{{ ansible_host_namespace1 }}
     ports:
       - target: {{ ansible_host_port }}
@@ -15,7 +15,7 @@ services:
       
   {{ ansible_host_namespace2 }}:
     platform: linux/amd64
-    image: aida0/gitfolio_{{ ansible_host_namespace2 }}:test
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/{{ ansible_host_namespace2 }}:dev
     container_name: gitfolio_{{ ansible_host_namespace2 }}
     ports:
       - target: {{ ansible_host_port }}
