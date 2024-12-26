@@ -34,7 +34,7 @@ module "gitfolio_network" {
 // DB
 module "gitfolio_rds" {
   source = "./module/DB/RDS"
-  count  = local.shared ? 1 : 0
+  count  = local.shared ? 2 : 0
 
   vpc_id                = module.gitfolio_network[0].vpc_id
   private_ips           = var.private_ips
@@ -42,10 +42,10 @@ module "gitfolio_rds" {
   security_group_ids    = module.gitfolio_network[0].security_group_ids
   rds_subnet_group_name = module.gitfolio_network[0].rds_subnet_group_name
 
-  identifier        = var.identifier
+  identifier        = format("%s-%s", var.identifier, count.index == 0 ? "dev" : "prod")
   engine            = var.engine
   engine_version    = var.engine_version
-  instance_class    = var.instance_class
+  instance_class    = count.index == 0 ? var.instance_class : "db.t3.medium"
   allocated_storage = var.allocated_storage
   storage_type      = var.storage_type
   db_name           = var.db_name

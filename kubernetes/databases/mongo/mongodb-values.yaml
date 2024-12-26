@@ -1,6 +1,9 @@
 architecture: replicaset
 replicaCount: 3
 
+auth:
+  enabled: false
+
 arbiter:
   enabled: false
 

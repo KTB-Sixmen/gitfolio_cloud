@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gitfolio-ai-service
-  namespace: gitfolio-ai
+  namespace: gitfolio
   labels:
     app: gitfolio-ai
 spec:

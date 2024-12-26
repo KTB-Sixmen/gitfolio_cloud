@@ -1,9 +1,8 @@
-# backend-configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gitfolio-backend-configmap
-  namespace: gitfolio-back
+  name: gitfolio-back-configmap
+  namespace: gitfolio
 data:
   # 서비스 URL 설정
   REDIRECT_ONBOARDING_URL: https://www.gitfolio.site/onboarding
@@ -11,8 +10,8 @@ data:
   PAYMENT_SUCCESS_REDIRECT_URL: https://www.gitfolio.site/plan/success
 
   MEMBER_SERVER_URL: http://gitfolio-member-service
-  PAYMENTS_SERVER_URL: http://gitfolio-payment-service
-  NOTIFICATIONS_SERVER_URL: http://gitfolio-notification-service
+  PAYMENT_SERVER_URL: http://gitfolio-payment-service
+  NOTIFICATION_SERVER_URL: http://gitfolio-notification-service
   AI_SERVER_URL: http://gitfolio-ai-service
 
   # 서비스 포트 설정
@@ -29,40 +28,40 @@ data:
 
   # REDIS 설정
   AUTH_REDIS_HOST: gitfolio-redis-auth-service
-  AUTH_REDIS_PORT: "6379"
+  AUTH_REDIS_PORT: "26379"
 
   RESUME_REDIS_HOST: gitfolio-redis-resume-service
-  RESUME_REDIS_PORT: "6379"
+  RESUME_REDIS_PORT: "26379"
+
+  # Access Token 만료 시간: 10분 (600초)
+  ACCESS_TOKEN_EXPIRY: "600"
+
+  # Refresh Token 만료 시간: 24시간 (86400초)
+  REFRESH_TOKEN_EXPIRY: "86400"
 
   # MySQL 설정
-  MEMBER_MYSQL_DB_HOST: gitfolio-mysql.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
+  MEMBER_MYSQL_DB_HOST: gitfolio-mysql-prod.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
   MEMBER_MYSQL_DB_PORT: "3306"
-  MEMBER_MYSQL_DB_NAME: gitfolio_member
+  MEMBER_MYSQL_DB_NAME: gitfolio_mysql
 
-  RESUME_MYSQL_DB_HOST: gitfolio-mysql.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
-  RESUME_MYSQL_DB_PORT: "3306"
-  RESUME_MYSQL_DB_NAME: gitfolio_resume
+  LIKE_MYSQL_DB_HOST: gitfolio-mysql-prod.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
+  LIKE_MYSQL_DB_PORT: "3306"
+  LIKE_MYSQL_DB_NAME: gitfolio_mysql
 
-  PAYMENT_MYSQL_DB_HOST: gitfolio-mysql.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
+  PAYMENT_MYSQL_DB_HOST: gitfolio-mysql-prod.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
   PAYMENT_MYSQL_DB_PORT: "3306"
-  PAYMENT_MYSQL_DB_NAME: gitfolio_payment
+  PAYMENT_MYSQL_DB_NAME: gitfolio_mysql
 
-  NOTIFICATION_MYSQL_DB_HOST: gitfolio-mysql.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
+  NOTIFICATION_MYSQL_DB_HOST: gitfolio-mysql-prod.c9mu608uomlm.ap-northeast-2.rds.amazonaws.com
   NOTIFICATION_MYSQL_DB_PORT: "3306"
-  NOTIFICATION_MYSQL_DB_NAME: gitfolio_notification
+  NOTIFICATION_MYSQL_DB_NAME: gitfolio_mysql
 
   # MongoDB 설정
-  MEMBER_MONGO_DB_USERNAME: gitfolio-mongo-member-service
-  MEMBER_MONGO_DB_PORT: "27017"
-  MEMBER_MONGO_DB_DATABASE: gitfolio_member
+  MEMBER_MONGO_DB_URI: mongodb://gitfolio-mongo-mongodb-0.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017,gitfolio-mongo-mongodb-1.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017,gitfolio-mongo-mongodb-2.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017/member?replicaSet=rs0
 
-  RESUME_MONGO_DB_USERNAME: gitfolio-mongo-resume-service
-  RESUME_MONGO_DB_PORT: "27017"
-  RESUME_MONGO_DB_DATABASE: gitfolio_resume
+  RESUME_MONGO_DB_URI: mongodb://gitfolio-mongo-mongodb-0.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017,gitfolio-mongo-mongodb-1.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017,gitfolio-mongo-mongodb-2.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017/resume?replicaSet=rs0
 
-  CHAT_MONGO_DB_USERNAME: gitfolio-mongo-chat-service
-  CHAT_MONGO_DB_PORT: "27017"
-  CHAT_MONGO_DB_DATABASE: gitfolio_chat
+  CHAT_MONGO_DB_URI: mongodb://gitfolio-mongo-mongodb-0.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017,gitfolio-mongo-mongodb-1.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017,gitfolio-mongo-mongodb-2.gitfolio-mongo-mongodb-headless.gitfolio.svc.cluster.local:27017/chat?replicaSet=rs0
 
   # S3
   S3_URL_PREFIX: https://gitfolio.s3.amazonaws.com/
@@ -75,13 +74,14 @@ data:
   KAFKA_PORT1: "9092"
 
   KAFKA_BROKER_ID: "1"
-  KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  KAFKA_ZOOKEEPER_CONNECT: gitfolio-zookeeper-service:2181
 
-  KAFKA_LISTENER_DOCKER: PLAINTEXT://0.0.0.0:29092
-  KAFKA_LISTENER_EXTERNAL: PLAINTEXT://0.0.0.0:9092
+  KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
 
-  KAFKA_ADVERTISED_LISTENER_DOCKER: PLAINTEXT://localhost:29092
-  KAFKA_ADVERTISED_LISTENER_EXTERNAL: PLAINTEXT://10.0.105.99:9092
+  KAFKA_ADVERTISED_LISTENERS: INTERNAL://gitfolio-kafka-service:29092,EXTERNAL://localhost:9092
 
-  KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER
+  KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
   KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+
+  # KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT

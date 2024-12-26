@@ -1,5 +1,5 @@
 - name: Configure Kubernetes prerequisites
-  hosts: kubernetes
+  hosts: k8s_worker2
   tasks:
     - name: Input shell color script(root)
       lineinfile:

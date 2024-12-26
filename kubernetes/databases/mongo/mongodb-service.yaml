@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gitfolio-mongo-member-service  # Secret에 정의된 MEMBER_MONGO_DB_HOST와 일치
-  namespace: gitfolio-mongo
+  namespace: gitfolio
   labels:
     app.kubernetes.io/component: mongodb
     app.kubernetes.io/instance: gitfolio-mongo
@@ -24,7 +24,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gitfolio-mongo-resume-service  # Secret에 정의된 RESUME_MONGO_DB_HOST와 일치
-  namespace: gitfolio-mongo
+  namespace: gitfolio
   labels:
     app.kubernetes.io/component: mongodb
     app.kubernetes.io/instance: gitfolio-mongo
@@ -46,7 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gitfolio-mongo-chat-service    # Secret에 정의된 CHAT_MONGO_DB_HOST와 일치
-  namespace: gitfolio-mongo
+  namespace: gitfolio
   labels:
     app.kubernetes.io/component: mongodb
     app.kubernetes.io/instance: gitfolio-mongo

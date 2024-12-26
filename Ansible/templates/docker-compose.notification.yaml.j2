@@ -1,7 +1,7 @@
 services:
   {{ ansible_host_namespace1 }}:
     platform: linux/amd64
-    image: aida0/gitfolio_{{ ansible_host_namespace1 }}:test
+    image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/{{ ansible_host_namespace1 }}:dev
     container_name: gitfolio_{{ ansible_host_namespace1 }}
     ports:
       - target: {{ ansible_host_port }}
@@ -39,11 +39,11 @@ services:
         protocol: tcp
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_LISTENERS: LISTENER_DOCKER://0.0.0.0:{{ ansible_kafka_port2 }},LISTENER_EXTERNAL://0.0.0.0:{{ ansible_kafka_port1 }}
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER://localhost:{{ ansible_kafka_port2 }},LISTENER_EXTERNAL://{{ ansible_kafka_external_host }}:{{ ansible_kafka_port1 }}
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER
-      KAFKA_ZOOKEEPER_CONNECT: {{ ansible_host_namespace3 }}:{{ ansible_zookeeper_port }}
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:{{ ansible_kafka_port2 }},EXTERNAL://0.0.0.0:{{ ansible_kafka_port1 }}
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://gitfolio_kafka:{{ ansible_kafka_port2 }},EXTERNAL://{{ ansible_kafka_external_host }}:{{ ansible_kafka_port1 }}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: gitfolio_{{ ansible_host_namespace3 }}:{{ ansible_zookeeper_port }}
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - {{ ansible_host_namespace3 }}

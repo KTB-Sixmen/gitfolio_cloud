@@ -3,17 +3,21 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gitfolio-auth-service
-  namespace: gitfolio-back
+  namespace: gitfolio
   labels:
     app: gitfolio-auth
 spec:
   selector:
     app: gitfolio-auth
   type: ClusterIP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
   ports:
     - name: http
-      port: 80            # 파드가 개방하는 포트
-      targetPort: 8080    # 앱이 리스닝하는 포트 
+      port: 80 # 파드가 개방하는 포트
+      targetPort: 8080 # 앱이 리스닝하는 포트
       protocol: TCP
     - name: https
       port: 443

@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gitfolio-kafka-deployment
-  namespace: gitfolio-back
+  name: gitfolio-back-kafka-deployment
+  namespace: gitfolio
   labels:
     app: gitfolio-kafka
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: gitfolio-kafka
@@ -15,6 +15,8 @@ spec:
       labels:
         app: gitfolio-kafka
     spec:
+      imagePullSecrets:
+        - name: gitfolio-container-registry
       containers:
         - name: gitfolio-kafka
           image: confluentinc/cp-kafka:7.4.0
@@ -25,4 +27,29 @@ spec:
               containerPort: 29092
           envFrom:
             - configMapRef:
-                name: backend-configmap
+                name: gitfolio-back-configmap
+            - secretRef:
+                name: gitfolio-back-secret
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - gitfolio-kafka
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
