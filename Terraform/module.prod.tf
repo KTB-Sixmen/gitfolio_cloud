@@ -48,7 +48,7 @@ module "gitfolio_ingress" {
 
 module "gitfolio_worker" {
   source = "./module/node/kubernetes"
-  count  = local.prod ? 3 : 0
+  count  = local.prod ? 6 : 0
 
   private_subnet_ids = data.terraform_remote_state.shared.outputs.private_subnet_ids
   security_group_ids = [
