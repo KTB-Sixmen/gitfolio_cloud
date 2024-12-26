@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gitfolio-auth-deployment
-  namespace: gitfolio-back
+  name: gitfolio-back-auth-deployment
+  namespace: gitfolio
   labels:
     app: gitfolio-auth
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: gitfolio-auth
@@ -15,20 +15,39 @@ spec:
       labels:
         app: gitfolio-auth
     spec:
+      imagePullSecrets:
+        - name: gitfolio-container-registry
       containers:
         - name: gitfolio-auth
-          image: aida0/gitfolio_auth:test
+          image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/auth:prod
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
-                name: backend-configmap
+                name: gitfolio-back-configmap
             - secretRef:
-                name: backend-secret
-          # resources:
-          #   requests:
-          #     memory: "256Mi"
-          #     cpu: "200m"
-          #   limits:
-          #     memory: "512Mi"
-          #     cpu: "500m"
+                name: gitfolio-back-secret
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - gitfolio-auth
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists

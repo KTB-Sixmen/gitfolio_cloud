@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gitfolio-front-deployment
-  namespace: gitfolio-front
+  namespace: gitfolio
   labels:
     app: gitfolio-front
 spec:
-  replicas: 3  # 고가용성을 위해 2개의 레플리카 추천
+  replicas: 1 # 고가용성을 위해 2개의 레플리카 추천
   selector:
     matchLabels:
       app: gitfolio-front
@@ -15,6 +15,8 @@ spec:
       labels:
         app: gitfolio-front
     spec:
+      imagePullSecrets:
+        - name: gitfolio-container-registry
       containers:
         - name: gitfolio-front
           image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/front:prod
@@ -26,11 +28,27 @@ spec:
           #       name: front-configmap
           #   - secretRef:
           #       name: front-secret
-          # resources:
-          #   requests:
-          #     memory: "256Mi"
-          #     cpu: "200m"
-          #   limits:
-          #     memory: "512Mi"
-          #     cpu: "500m"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - gitfolio-front
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
 #추후 헬스체크 추가시 구현필요

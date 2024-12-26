@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: backend-config
+  name: gitfolio-backend-configmap
   namespace: gitfolio
 data:
   # 서비스 URL 설정

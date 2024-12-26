@@ -1,12 +1,12 @@
 global:
-  namespace: gitfolio-ingress
+  namespace: gitfolio
 
 controller:
   name: ingress-controller
 
   kind: Deployment
   
-  replicaCount: 3
+  replicaCount: 1
 
   affinity:
     nodeAffinity:
@@ -20,9 +20,9 @@ controller:
   service:
     enabled: true
     type: NodePort
-    ports:
-      http: 80
-      https: 443
+    nodePorts:
+      http: 30080
+      https: 30443
     annotations: {}
 
   containerPorts:
@@ -72,18 +72,18 @@ controller:
   admissionWebhooks:
     enabled: false
 
-defaultBackend:
-  enabled: true
+# defaultBackend:
+#   enabled: true
 
-  name: ingress-backend
+#   name: ingress-backend
 
-  replicaCount: 0
+#   replicaCount: 1
 
-  affinity:
-    nodeAffinity:
-      # 파드 스케줄링 시 반드시 충족해야 하는 조건
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/ingress
-              operator: Exists
+#   affinity:
+#     nodeAffinity:
+#       # 파드 스케줄링 시 반드시 충족해야 하는 조건
+#       requiredDuringSchedulingIgnoredDuringExecution:
+#         nodeSelectorTerms:
+#           - matchExpressions:
+#             - key: node-role.kubernetes.io/ingress
+#               operator: Exists

@@ -2,87 +2,104 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gitfolio-ingress     # 배포 이름으로 ingress-deployment 사용
-  namespace: gitfolio-ingress
+  name: gitfolio-ingress # 배포 이름으로 ingress-deployment 사용
+  namespace: gitfolio
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    # nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/affinity-mode: "balanced"
+    nginx.ingress.kubernetes.io/session-cookie-name: "INGRESSCOOKIE"
 spec:
   ingressClassName: nginx
   rules:
-  - host: www.gitfolio.site
-    http:
-      paths:
-    # 프런트엔드 서비스
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-front-service
-            port:
-              number: 80
-      # 인증 서비스
-      - path: /(oauth2 | login)(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-auth-service
-            port:
-              number: 80
-      - path: /api/auth(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-auth-service
-            port:
-              number: 80
-      # 멤버 서비스
-      - path: /api/members(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-member-service
-            port:
-              number: 81
-      # 채팅 서비스
-      - path: /api/chat(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-chat-service
-            port:
-              number: 82
-      # 이력서 서비스
-      - path: /api/resumes(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-ai-service
-            port:
-              number: 80
-      # 결제 서비스
-      - path: /api/payments(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-payment-service
-            port:
-              number: 81
-      # 알림 서비스
-      - path: /api/notifications(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-notification-service
-            port:
-              number: 80
-      # AI 서비스
-      - path: /api/ai(/.*)?
-        pathType: Prefix
-        backend:
-          service:
-            name: gitfolio-ai-service
-            port:
-              number: 80
+    - host: www.gitfolio.site
+      http:
+        paths:
+          # 프런트엔드 서비스
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-front-service
+                port:
+                  number: 80
+          # 인증 서비스
+          # - path: /login/oauth2/code/github
+          #   pathType: Exact
+          #   backend:
+          #     service:
+          #       name: gitfolio-auth-service
+          #       port:
+          #         number: 80
+          # - path: /login(/.*)?
+          #   pathType: Prefix
+          #   backend:
+          #     service:
+          #       name: gitfolio-auth-service
+          #       port:
+          #         number: 80
+          - path: /(oauth2|login)(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-auth-service
+                port:
+                  number: 80
+          - path: /api/auth(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-auth-service
+                port:
+                  number: 80
+          # 멤버 서비스
+          - path: /api/members(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-member-service
+                port:
+                  number: 81
+          # 채팅 서비스
+          - path: /api/chat(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-chat-service
+                port:
+                  number: 82
+          # 이력서 서비스
+          - path: /api/resumes(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-ai-service
+                port:
+                  number: 80
+          # 결제 서비스
+          - path: /api/payments(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-payment-service
+                port:
+                  number: 81
+          # 알림 서비스
+          - path: /api/notifications(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-notification-service
+                port:
+                  number: 80
+          # AI 서비스
+          - path: /api/ai(/.*)?
+            pathType: Prefix
+            backend:
+              service:
+                name: gitfolio-ai-service
+                port:
+                  number: 80
