@@ -108,3 +108,4 @@ $RECYCLE.BIN/
 
 # k8s
 secret.yaml
+*secret*.yaml

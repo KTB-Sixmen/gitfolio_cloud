@@ -1,25 +1,21 @@
-locals {
-  shared = terraform.workspace == "shared"
-}
-
 resource "aws_vpc" "gitfolio" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
-  
+
   tags = {
     Name = "Gitfolio VPC"
   }
 }
 
 resource "aws_subnet" "public" {
-  count             = length(var.public_subnet_cidrs)
-  vpc_id            = aws_vpc.gitfolio.id
-  cidr_block        = var.public_subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index % 2]
+  count                   = length(var.public_subnet_cidrs)
+  vpc_id                  = aws_vpc.gitfolio.id
+  cidr_block              = var.public_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index % 2]
   map_public_ip_on_launch = true
-  
+
   tags = {
-    Name = "Gitfolio ${ terraform.workspace } lb subnet${ count.index + 1 }"
+    Name = "Gitfolio lb subnet${count.index + 1}"
   }
 }
 
@@ -27,7 +23,7 @@ resource "aws_subnet" "nat" {
   vpc_id            = aws_vpc.gitfolio.id
   cidr_block        = var.nat_subnet_cidr
   availability_zone = var.availability_zones[1]
-  
+
   tags = {
     Name = "Gitfolio NAT subnet"
   }
@@ -38,7 +34,7 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.gitfolio.id
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index % 2]
-  
+
   tags = {
     Name = "Gitfolio ${var.instance_names[count.index]} subnet"
   }
@@ -49,7 +45,7 @@ resource "aws_subnet" "rds" {
   vpc_id            = aws_vpc.gitfolio.id
   cidr_block        = var.db_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
-  
+
   tags = {
     Name = "Gitfolio RDS subnet${count.index}"
   }
@@ -65,7 +61,7 @@ resource "aws_db_subnet_group" "rds" {
 
 resource "aws_eip" "nat_eip" {
   domain = "vpc"
-  
+
   tags = {
     Name = "Gitfolio NAT EIP"
   }
@@ -87,7 +83,7 @@ resource "aws_nat_gateway" "nat" {
     Name = "Gitfolio NAT Gateway"
   }
 
-  depends_on = [ aws_eip.nat_eip, aws_internet_gateway.igw ]
+  depends_on = [aws_eip.nat_eip, aws_internet_gateway.igw]
 }
 
 resource "aws_route_table" "public" {
@@ -123,8 +119,8 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route_table_association" "nat" {
- subnet_id      = aws_subnet.nat.id
- route_table_id = aws_route_table.public.id
+  subnet_id      = aws_subnet.nat.id
+  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private" {
@@ -140,37 +136,35 @@ resource "aws_route_table_association" "rds" {
 }
 
 resource "aws_security_group" "base" {
-  name = "base_sg"
+  name   = "base_sg"
   vpc_id = aws_vpc.gitfolio.id
 
-  ingress {
-    description = "HTTP"
-    from_port = 80
-    to_port = 81
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
+  dynamic "ingress" {
+    for_each = {
+      "HTTP"  = 80,
+      "HTTPS" = 443,
+    }
+
+    content {
+      description = ingress.key
+      from_port   = ingress.value
+      to_port     = ingress.value + 1
+      protocol    = "tcp"
+      cidr_blocks = [var.any_ip]
+    }
   }
 
   ingress {
-    description = "HTTPS"
-    from_port = 443
-    to_port = 444
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
-  }
-
-  ingress {
-    description = "ICMP"
-    from_port = 8
-    to_port = 0
-    protocol = "icmp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = [var.any_ip]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = [var.any_ip]
   }
 
@@ -179,93 +173,149 @@ resource "aws_security_group" "base" {
   }
 }
 
-resource "aws_security_group" "back" {
-  name = "back_sg"
+resource "aws_security_group" "app" {
+  name   = "app_sg"
   vpc_id = aws_vpc.gitfolio.id
 
-  ingress {
-    description = "kafka1"
-    from_port = 9092
-    to_port = 9092
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
-  }
+  dynamic "ingress" {
+    for_each = {
+      "kafka1"         = 9092,
+      "kafka2"         = 29092,
+      "zookeeper"      = 2181,
+      "Sentry webhook" = 8000
+    }
 
-  ingress {
-    description = "kafka2"
-    from_port = 29092
-    to_port = 29092
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
-  }
-
-  ingress {
-    description = "zookeeper"
-    from_port = 2181
-    to_port = 2181
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
+    content {
+      description = ingress.key
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = [var.any_ip]
+    }
   }
 
   tags = {
-    Name = "Gitfolio backend security group"
-  }
-}
-
-resource "aws_security_group" "discord_bot" {
-  name = "discord_bot_sg"
-  vpc_id = aws_vpc.gitfolio.id
-
-  ingress {
-    description = "Sentry webhook"
-    from_port = 8000
-    to_port = 8000
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
-  }
-  
-  tags = {
-    Name = "Gitfolio backend security group"
+    Name = "Gitfolio app security group"
   }
 }
 
 resource "aws_security_group" "cicd" {
-  name = "cicd_sg"
+  name   = "cicd_sg"
   vpc_id = aws_vpc.gitfolio.id
+
+  dynamic "ingress" {
+    for_each = {
+      "Jenkins"       = 8080,
+      "Prometheus"    = 9090,
+      "Grafana"       = 3000,
+      "Node Exporter" = 9100,
+    }
+
+    content {
+      description = ingress.key
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = [var.any_ip]
+    }
+  }
 
   tags = {
     Name = "Gitfolio CI/CD security group"
   }
 }
 
-resource "aws_security_group" "kubernetes" {
-  name = "kubernetes_sg"
+resource "aws_security_group" "k8s_master" {
+  name   = "k8s_master_sg"
   vpc_id = aws_vpc.gitfolio.id
-  
+
+  dynamic "ingress" {
+    for_each = {
+      "kubectl api"             = 6443,
+      "etcd api"                = 2379,
+      "etcd peer"               = 2380,
+      "kubelet api"             = 10250,
+      "kube-controller-manager" = 10257,
+      "kube-scheduler"          = 10259,
+      "bgp"                     = 179,
+      "typha"                   = 5473,
+    }
+
+    content {
+      description = ingress.key
+      from_port   = ingress.value
+      to_port     = ingress.value + 1
+      protocol    = "tcp"
+      cidr_blocks = [var.any_ip]
+    }
+  }
+
   ingress {
-    description = "Kubernetes API"
-    from_port = 6443
-    to_port = 6443
-    protocol = "tcp"
+    description = "vxlan"
+    from_port   = 4789
+    to_port     = 4789
+    protocol    = "udp"
     cidr_blocks = [var.any_ip]
   }
 
   tags = {
-    Name = "Gitfolio kubernetes master node security group"
+    Name = "Gitfolio k8s master node security group"
+  }
+}
+
+resource "aws_security_group" "k8s_worker" {
+  name   = "k8s_worker_sg"
+  vpc_id = aws_vpc.gitfolio.id
+
+  dynamic "ingress" {
+    for_each = {
+      "kubelet api"   = 10250,
+      "ingress-nginx" = 10254,
+      "bgp"           = 179,
+      "typha"         = 5473,
+    }
+
+    content {
+      description = ingress.key
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = [var.any_ip]
+    }
+  }
+
+  ingress {
+    description = "NodePort"
+    from_port   = 30000
+    to_port     = 32767
+    protocol    = "tcp"
+    cidr_blocks = [var.any_ip]
+  }
+
+  ingress {
+    description = "vxlan"
+    from_port   = 4789
+    to_port     = 4789
+    protocol    = "udp"
+    cidr_blocks = [var.any_ip]
+  }
+
+  tags = {
+    Name = "Gitfolio k8s worker node security group"
   }
 }
 
 resource "aws_security_group" "rds" {
-  name = "rds_sg"
+  name   = "rds_sg"
   vpc_id = aws_vpc.gitfolio.id
 
   ingress {
-    description = "MySQL"
-    from_port = 3306
-    to_port = 3306
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
-    security_groups = [aws_security_group.back.id]
+    description     = "MySQL"
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    cidr_blocks     = [var.any_ip]
+    security_groups = [aws_security_group.app.id]
   }
 
   tags = {
@@ -273,36 +323,26 @@ resource "aws_security_group" "rds" {
   }
 }
 
-resource "aws_security_group" "mongo" {
-  name = "mongo_sg"
+resource "aws_security_group" "nosql" {
+  name   = "nosql_sg"
   vpc_id = aws_vpc.gitfolio.id
 
-  ingress {
-    description = "MongoDB"
-    from_port = 27017
-    to_port = 27017
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
+  dynamic "ingress" {
+    for_each = {
+      "MongoDB" = 27017,
+      "Redis"   = 6379,
+    }
+
+    content {
+      description = ingress.key
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = [var.any_ip]
+    }
   }
 
   tags = {
-    Name = "Gitfolio MongoDB security group"
-  }
-}
-
-resource "aws_security_group" "redis" {
-  name = "redis_sg"
-  vpc_id = aws_vpc.gitfolio.id
-
-  ingress {
-    description = "Redis"
-    from_port = 6379
-    to_port = 6379
-    protocol = "tcp"
-    cidr_blocks = [var.any_ip]
-  }
-
-  tags = {
-    Name = "Gitfolio Redis security group"
+    Name = "Gitfolio NoSQL security group"
   }
 }

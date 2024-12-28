@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitfolio-back-payment-deployment # 배포 이름으로 payment-deployment 사용
+  namespace: gitfolio
+  labels:
+    app: gitfolio-payment # payment 서비스임을 나타내는 레이블
+spec:
+  replicas: 1 # 고가용성을 위한 2개의 복제본
+  selector:
+    matchLabels:
+      app: gitfolio-payment # payment 레이블을 가진 파드 선택
+  template:
+    metadata:
+      labels:
+        app: gitfolio-payment
+    spec:
+      imagePullSecrets:
+        - name: gitfolio-container-registry
+      containers:
+        - name: gitfolio-payment
+          image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/payment:prod # Docker Hub의 payment 서비스 이미지
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080 # 애플리케이션의 포트
+          envFrom:
+            - configMapRef:
+                name: gitfolio-back-configmap # 일반 설정값들을 가진 ConfigMap 참조
+            - secretRef:
+                name: gitfolio-back-secret # 민감한 정보를 가진 Secret 참조
+          resources: # 컨테이너 리소스 제한 설정
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - gitfolio-payment
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists

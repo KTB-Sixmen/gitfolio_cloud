@@ -1,0 +1,21 @@
+# notification-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitfolio-notification-service
+  namespace: gitfolio
+  labels:
+    app: gitfolio-notification
+spec:
+  selector:
+    app: gitfolio-notification
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80            # 파드가 개방하는 포트
+      targetPort: 8080    # 앱이 리스닝하는 포트 
+      protocol: TCP
+    - name: https
+      port: 443
+      targetPort: 8080
+      protocol: TCP

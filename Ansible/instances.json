@@ -1,31 +1,15 @@
 [
   {
     "Name": "Gitfolio Frontend",
-    "InstanceId": "i-033b4b7be6dbbe75b",
+    "InstanceId": "i-057b37287bec0db4a",
     "IP": "10.0.104.33",
     "Service": "front",
     "Type": "ec2",
     "Environment": "dev"
   },
   {
-    "Name": "Gitfolio Frontend",
-    "InstanceId": "i-0959e0f2ee4c10a0b",
-    "IP": "10.0.104.34",
-    "Service": "front",
-    "Type": "ec2",
-    "Environment": "dev-seop"
-  },
-  {
-    "Name": "Gitfolio BE4",
-    "InstanceId": "i-0ef502c7d8b775e44",
-    "IP": "10.0.105.102",
-    "Service": "back",
-    "Type": "ec2",
-    "Environment": "dev"
-  },
-  {
     "Name": "Gitfolio BE1",
-    "InstanceId": "i-0d33980a2f5856026",
+    "InstanceId": "i-04590274e9fb787d0",
     "IP": "10.0.105.44",
     "Service": "back",
     "Type": "ec2",
@@ -33,7 +17,7 @@
   },
   {
     "Name": "Gitfolio BE2",
-    "InstanceId": "i-0f8618259ab94a8a0",
+    "InstanceId": "i-07eac15c29c9e3b7e",
     "IP": "10.0.105.75",
     "Service": "back",
     "Type": "ec2",
@@ -41,7 +25,7 @@
   },
   {
     "Name": "Gitfolio BE3",
-    "InstanceId": "i-0f6f4ae9232ac21d1",
+    "InstanceId": "i-08cbc17d7b4baa102",
     "IP": "10.0.105.99",
     "Service": "back",
     "Type": "ec2",
@@ -49,26 +33,130 @@
   },
   {
     "Name": "Gitfolio AI",
-    "InstanceId": "i-02c849738e436c50a",
+    "InstanceId": "i-02e0d3e1ce27e85e2",
     "IP": "10.0.106.88",
     "Service": "ai",
     "Type": "ec2",
     "Environment": "dev"
   },
   {
-    "Name": "Gitfolio MongoDB",
-    "InstanceId": "i-0a54741a94bcfebe2",
+    "Name": "Gitfolio dev Jenkins",
+    "InstanceId": "i-05c4404434f843c3f",
+    "IP": "10.0.107.11",
+    "Service": "jenkins",
+    "Type": "ec2",
+    "Environment": "dev"
+  },
+  {
+    "Name": "Gitfolio DB Master",
+    "InstanceId": "i-0acef4acdb999e651",
     "IP": "10.0.109.14",
-    "Service": "mongo",
+    "Service": "master",
     "Type": "db",
     "Environment": "shared"
   },
   {
-    "Name": "Gitfolio Redis",
-    "InstanceId": "i-0c7cbd42c2a406932",
+    "Name": "Gitfolio DB Slave1",
+    "InstanceId": "i-0fdb1a5208dd21250",
     "IP": "10.0.110.38",
-    "Service": "redis",
+    "Service": "slave",
     "Type": "db",
     "Environment": "shared"
+  },
+  {
+    "Name": "Gitfolio DB Slave2",
+    "InstanceId": "i-077c262d75205557a",
+    "IP": "10.0.110.39",
+    "Service": "slave",
+    "Type": "db",
+    "Environment": "shared"
+  },
+  {
+    "Name": "Gitfolio k8s db node1",
+    "InstanceId": "i-0107263b992c550ed",
+    "IP": "10.0.4.11",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s db node2",
+    "InstanceId": "i-06494db35e830a488",
+    "IP": "10.0.4.12",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s db node3",
+    "InstanceId": "i-0b69c4bb2d9e1f811",
+    "IP": "10.0.4.13",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s worker node2",
+    "InstanceId": "i-094aee108c9e2e6f9",
+    "IP": "10.0.4.21",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s worker node5",
+    "InstanceId": "i-0fccf4a271ee2c063",
+    "IP": "10.0.4.37",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s worker node3",
+    "InstanceId": "i-0b348d71b3ee46219",
+    "IP": "10.0.4.48",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s master node1",
+    "InstanceId": "i-0beabaadcad874e9c",
+    "IP": "10.0.4.5",
+    "Service": "master",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s worker node4",
+    "InstanceId": "i-0e6d1eb26a95ccb90",
+    "IP": "10.0.4.77",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s ingress node1",
+    "InstanceId": "i-0d73de5f9d5a8bbe6",
+    "IP": "10.0.4.8",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s worker node1",
+    "InstanceId": "i-0c67628c149c61a86",
+    "IP": "10.0.4.89",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
+  },
+  {
+    "Name": "Gitfolio k8s worker node6",
+    "InstanceId": "i-04c71385fb6a72e0d",
+    "IP": "10.0.4.98",
+    "Service": "worker",
+    "Type": "kubernetes",
+    "Environment": "prod"
   }
 ]

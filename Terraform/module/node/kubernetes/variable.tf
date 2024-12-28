@@ -1,13 +1,3 @@
-variable "vpc_id" {
-  description = "ID of the VPC"
-  type        = string
-}
-
-variable "public_subnet_cidrs" {
-  description = "CIDR blocks of the public subnets"
-  type        = list(string)
-}
-
 variable "private_subnet_ids" {
   description = "IDs of the private subnets"
   type        = list(string)
@@ -28,14 +18,14 @@ variable "ami_id" {
   type        = string
 }
 
-variable "private_ips" {
-  description = "Private IPs for subnets"
-  type        = map(string)
+variable "private_ip" {
+  description = "Private IP for subnet"
+  type        = string
 }
 
 variable "security_group_ids" {
   description = "Security group IDs"
-  type        = map(string)  
+  type        = list(string)
 }
 
 variable "iam_instance_profile" {
@@ -43,15 +33,13 @@ variable "iam_instance_profile" {
   type        = string
 }
 
-# 쿠버관련 변수추가
-
-variable "private_subnet_cidrs" {
-  description = "CIDR blocks of the private subnets"
-  type        = list(string)
-}
-
 variable "worker_count" {
   description = "Number of Kubernetes worker nodes"
   type        = number
-  default     = 2
+  default     = 3
+}
+
+variable "tags" {
+  description = "Tags for the EC2 instances"
+  type        = map(string)
 }

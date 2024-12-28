@@ -1,0 +1,89 @@
+global:
+  namespace: gitfolio
+
+controller:
+  name: ingress-controller
+
+  kind: Deployment
+  
+  replicaCount: 1
+
+  affinity:
+    nodeAffinity:
+      # 파드 스케줄링 시 반드시 충족해야 하는 조건
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/ingress
+              operator: Exists
+
+  service:
+    enabled: true
+    type: NodePort
+    nodePorts:
+      http: 30080
+      https: 30443
+    annotations: {}
+
+  containerPorts:
+    http: 80
+    https: 443
+    healthz: 10254
+
+  # Health checking
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+  
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+    
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    fsGroup: 1001
+
+  metrics:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10254"
+  
+  admissionWebhooks:
+    enabled: false
+
+# defaultBackend:
+#   enabled: true
+
+#   name: ingress-backend
+
+#   replicaCount: 1
+
+#   affinity:
+#     nodeAffinity:
+#       # 파드 스케줄링 시 반드시 충족해야 하는 조건
+#       requiredDuringSchedulingIgnoredDuringExecution:
+#         nodeSelectorTerms:
+#           - matchExpressions:
+#             - key: node-role.kubernetes.io/ingress
+#               operator: Exists

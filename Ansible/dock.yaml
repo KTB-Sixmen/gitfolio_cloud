@@ -1,25 +1,31 @@
-- hosts: front
-  gather_facts: no
+- hosts: ai
   tasks:
-  - name: down containers
-    shell: docker-compose down -v --rmi all
-    args:
-      chdir: "{{ ansible_home_dir }}"
-
-  - name: pull containers
-    shell: docker-compose pull
-    args:
-      chdir: "{{ ansible_home_dir }}"
-
-  - name: up containers
-    shell: docker-compose up -d
-    args:
-      chdir: "{{ ansible_home_dir }}"
-      
-  - name: Execute docker ps using shell
-    shell: docker ps -a
-    register: docker_ps_output
-
-  - name: Display shell command output
-    debug:
-      var: docker_ps_output.stdout_lines
+    - name: down containers
+      shell: |
+        docker-compose down -v --rmi all 
+        docker system prune -f
+        docker image prune -f
+      args:
+        chdir: "{{ ansible_home_dir }}"
+  
+    # - name: pull containers
+    #   shell: docker-compose pull
+    #   args:
+    #     chdir: "{{ ansible_home_dir }}"
+  
+    # - name: up containers
+    #   shell: docker-compose up -d
+    #   args:
+    #     chdir: "{{ ansible_home_dir }}"
+        
+    - name: Execute docker ps using shell
+      shell: docker ps -a
+      register: docker_ps_output
+  
+    - name: Display shell command output
+      debug:
+        var: docker_ps_output.stdout_lines
+        
+    # - name: ecr login
+    #   shell: |
+    #     aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com

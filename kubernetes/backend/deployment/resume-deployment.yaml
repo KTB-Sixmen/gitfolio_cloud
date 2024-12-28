@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitfolio-back-resume-deployment
+  namespace: gitfolio
+  labels:
+    app: gitfolio-resume
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitfolio-resume
+  template:
+    metadata:
+      labels:
+        app: gitfolio-resume
+    spec:
+      imagePullSecrets:
+        - name: gitfolio-container-registry
+      containers:
+        - name: gitfolio-resume
+          image: 727646500036.dkr.ecr.ap-northeast-2.amazonaws.com/gitfolio/resume:prod
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: gitfolio-back-configmap
+            - secretRef:
+                name: gitfolio-back-secret
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "300m"
+            limits:
+              memory: "1Gi"
+              cpu: "600m"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - gitfolio-resume
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists

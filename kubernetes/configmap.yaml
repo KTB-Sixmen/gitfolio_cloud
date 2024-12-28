@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitfolio-config
+data:
+  # URL 설정
+  REDIRECT_ONBOARDING_URL: "https://www.gitfolio.site/onboarding"
+  REDIRECT_MAIN_URL: "https://www.gitfolio.site/community"
+
+  # 서버 포트 설정
+  AUTH_SERVER_PORT: "8080"
+  MEMBER_SERVER_PORT: "8080"
+  RESUME_SERVER_PORT: "8080"
+  PAYMENT_SERVER_PORT: "8080"
+  NOTIFICATION_SERVER_PORT: "8080"
+  CHAT_SERVER_PORT: "8080"
+
+  # MongoDB 설정
+  MONGO_INITDB_DATABASE: "gitfolio_mongo"
+
+  # 기타 설정들
+  ACCESS_TOKEN_EXPIRY: "600000"
+  REFRESH_TOKEN_EXPIRY: "86400000"

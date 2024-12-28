@@ -1,6 +1,11 @@
+variable "ecr_namespace_name" {
+  description  = "Namespace of the ECR repository"
+  type         = string
+}
+
 variable "ecr_repo_name" {
   description  = "Name of the ECR repository"
-  type         = string
+  type         = list(string)
 }
 
 variable "tag_mutability" {
@@ -21,4 +26,9 @@ variable "policy_countType" {
 variable "policy_countNum" {
   description  = "Count number of ECR lifecycle policy"
   type         = number
+}
+
+variable "ecr_index" {
+  description = "Index of ECR"
+  type        = number
 }

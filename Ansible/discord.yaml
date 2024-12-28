@@ -1,25 +1,24 @@
 - hosts: front
-  gather_facts: no
   tasks:
-  - name: down containers
-    shell: docker-compose down discord_bot
-    args:
-      chdir: "{{ ansible_home_dir }}"
-
-  - name: delete image
-    shell: docker rmi aida0/gitfolio_discord_bot:latest
-    args:
-      chdir: "{{ ansible_home_dir }}"
-
-  - name: up containers
-    shell: docker-compose up -d
-    args:
-      chdir: "{{ ansible_home_dir }}"
-
-  - name: Execute docker ps using shell
-    shell: docker ps -a
-    register: docker_ps_output
-
-  - name: Display shell command output
-    debug:
-      var: docker_ps_output.stdout_lines
+    - name: down containers
+      shell: docker-compose down discord_bot
+      args:
+        chdir: "{{ ansible_home_dir }}"
+  
+    - name: delete image
+      shell: docker rmi aida0/gitfolio_discord_bot:latest
+      args:
+        chdir: "{{ ansible_home_dir }}"
+  
+    - name: up containers
+      shell: docker-compose up -d
+      args:
+        chdir: "{{ ansible_home_dir }}"
+  
+    - name: Execute docker ps using shell
+      shell: docker ps -a
+      register: docker_ps_output
+  
+    - name: Display shell command output
+      debug:
+        var: docker_ps_output.stdout_lines

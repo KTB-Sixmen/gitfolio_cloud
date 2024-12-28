@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "gitfolio" {
-  name                   = var.ecr_repo_name
+  name                   = "${ var.ecr_namespace_name }/${ var.ecr_repo_name[var.ecr_index] }"
   image_tag_mutability   = var.tag_mutability
 
   image_scanning_configuration {
@@ -7,7 +7,7 @@ resource "aws_ecr_repository" "gitfolio" {
   }
 
   tags = {
-    Name = "Gitfolio ECR ${terraform.workspace} repository"
+    Name = "Gitfolio ${ var.ecr_repo_name[var.ecr_index] } ECR repository"
     Environment = terraform.workspace
   }
 }
@@ -18,8 +18,8 @@ resource "aws_ecr_lifecycle_policy" "gitfolio_dev_lifecycle" {
   policy = jsonencode({
     rules = [
       {
-        rulePriority     = 1
-        description      = "Keep images created under a week"
+        rulePriority   = 1
+        description    = "Keep images created under a week"
         selection = {
           tagStatus    = var.policy_tagStatus
           countType    = var.policy_countType

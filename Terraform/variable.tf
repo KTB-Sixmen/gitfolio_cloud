@@ -24,11 +24,6 @@ variable "nosql_private_ips" {
   type        = map(string)
 }
 
-variable "elastic_ip_names" {
-  description = "Elastic IPs for public subnets"
-  type        = map(string)
-}
-
 variable "any_ip" {
   description = "IP address for anywhere"
   type        = string
@@ -66,7 +61,7 @@ variable "db_subnet_cidrs" {
   type        = list(string)
 }
 
-variable identifier {
+variable "identifier" {
   description = "RDS instance name"
   type        = string
 }
@@ -111,6 +106,16 @@ variable "db_password" {
   type        = string
 }
 
+variable "backup_period" {
+  description = "Backup retention period"
+  type        = number
+}
+
+variable "backup_window" {
+  description = "Backup window"
+  type        = string
+}
+
 // 로드 밸런서 변수
 variable "route53_domain" {
   description = "Domain for route53"
@@ -120,6 +125,11 @@ variable "route53_domain" {
 variable "lb_type" {
   description = "Type of load balancer"
   type        = string
+}
+
+variable "idle_timeout" {
+  description = "Idle timeout for load balancer"
+  type        = number
 }
 
 variable "delete_protection" {
@@ -178,36 +188,47 @@ variable "health_unthreshold" {
 }
 
 // ECR 변수
+variable "ecr_namespace_name" {
+  description = "Namespace of the ECR repository"
+  type        = string
+}
+
 variable "ecr_repo_name" {
-  description  = "Name of the ECR repository"
-  type         = string
+  description = "Name of the ECR repository"
+  type        = list(string)
 }
 
 variable "tag_mutability" {
-  description  = "Attribute which image tage is mutable"
-  type         = string
+  description = "Attribute which image tage is mutable"
+  type        = string
 }
 
 variable "policy_tagStatus" {
-  description  = "Tag status of ECR lifesycle policy"
-  type         = string
+  description = "Tag status of ECR lifesycle policy"
+  type        = string
 }
 
 variable "policy_countType" {
-  description  = "Count type of ECR lifecycle policy"
-  type         = string
+  description = "Count type of ECR lifecycle policy"
+  type        = string
 }
 
 variable "policy_countNum" {
-  description  = "Count number of ECR lifecycle policy"
-  type         = number
+  description = "Count number of ECR lifecycle policy"
+  type        = number
 }
+
+variable "ecr_index" {
+  description = "Index of ECR"
+  type        = number
+}
+
 
 variable "kubernetes_config" {
   type = object({
-    worker_count       = number
-    pod_network_cidr   = string
-    service_cidr       = string
+    worker_count     = number
+    pod_network_cidr = string
+    service_cidr     = string
   })
   description = "Kubernetes configuration settings"
 }

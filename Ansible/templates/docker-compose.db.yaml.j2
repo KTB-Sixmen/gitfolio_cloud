@@ -1,0 +1,37 @@
+services:
+  {{ ansible_host_namespace1 }}:
+    platform: linux/amd64
+    image: {{ ansible_host_namespace1 }}:5.0
+    container_name: gitfolio_{{ ansible_host_namespace1 }}
+    ports:
+      - target: {{ ansible_host_port1 }}
+        published: {{ ansible_host_port1 }}
+        protocol: tcp
+    environment:
+      MONGO_INITDB_DATABASE: gitfolio_{{ ansible_host_namespace1 }}
+    volumes:
+      - {{ ansible_host_namespace1 }}_data:/data/{{ ansible_host_namespace1 }}
+    networks:
+      - {{ ansible_network_namespace }}
+  
+  {{ ansible_host_namespace2 }}:
+    platform: linux/amd64
+    image: {{ ansible_host_namespace2 }}:alpine
+    container_name: gitfolio_{{ ansible_host_namespace2 }}
+    ports:
+      - target: {{ ansible_host_port2 }}
+        published: {{ ansible_host_port2 }}
+        protocol: tcp
+    volumes:
+      - {{ ansible_host_namespace2 }}_data:/data/{{ ansible_host_namespace2 }}
+    networks:
+      - {{ ansible_network_namespace }}
+
+volumes:
+  {{ ansible_host_namespace1 }}_data:
+  {{ ansible_host_namespace2 }}_data:
+
+networks:
+  {{ ansible_network_namespace }}:
+    driver: overlay
+    attachable: true
