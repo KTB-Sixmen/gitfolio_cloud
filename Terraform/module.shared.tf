@@ -34,7 +34,7 @@ module "gitfolio_network" {
 // DB
 module "gitfolio_rds" {
   source = "./module/DB/RDS"
-  count  = local.shared ? 2 : 0
+  count  = local.shared ? 0 : 0
 
   vpc_id                = module.gitfolio_network[0].vpc_id
   private_ips           = var.private_ips
@@ -57,7 +57,7 @@ module "gitfolio_rds" {
 
 module "gitfolio_nosql" {
   source = "./module/DB/NoSQL"
-  count  = local.shared ? 3 : 0
+  count  = local.shared ? 0 : 0
 
   vpc_id               = module.gitfolio_network[0].vpc_id
   public_subnet_cidrs  = var.public_subnet_cidrs
@@ -78,7 +78,7 @@ module "gitfolio_nosql" {
 // Container
 module "gitfolio_ecr" {
   source = "./module/ECR"
-  count  = local.shared ? 8 : 0
+  count  = local.shared ? 0 : 0
 
   ecr_index          = count.index
   ecr_namespace_name = var.ecr_namespace_name
