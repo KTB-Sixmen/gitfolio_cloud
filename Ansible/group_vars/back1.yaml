@@ -1,0 +1,4 @@
+ansible_host_namespace1: auth
+ansible_host_namespace2: member
+ansible_host_port: 8080
+ansible_network_namespace: back

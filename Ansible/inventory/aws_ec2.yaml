@@ -1,0 +1,44 @@
+plugin: aws_ec2
+
+regions:
+  - ap-northeast-2
+
+keyed_groups:
+  - keys: tags.Environment
+    prefix: env
+    separator: "_"
+  - keys: tags.Service
+    prefix: service
+    separator: "_"
+  - keys: tags.Module
+    prefix: module
+    separator: "_"
+  - keys: private_ip_address
+    prefix: ip
+
+filters:
+  instance-state-name: running
+
+groups:
+  dev: "'dev' in tags.Environment"
+  prod: "'prod' in tags.Environment"
+  master: "'master' in tags.Service"  # 마스터 노드 그룹
+  worker: "'worker' in tags.Service"  # 워커 노드 그룹
+  kubernetes: "'kubernetes' in tags.Module"  # Kubernetes 관련 노드 전체
+  front: "'front' in tags.Service"
+  back: "'back' in tags.Service"
+  ai: "'ai' in tags.Service"
+  mongo: "'mongo' in tags.Service"
+  redis: "'redis' in tags.Service"
+  ec2: "'ec2' in tags.Type"
+  db: "'db' in tags.Type"
+  back1: "'1' in tags.Index"
+  back2: "'2' in tags.Index"
+  back3: "'3' in tags.Index" 
+  back4: "'4' in tags.Index"
+hostnames:
+  - tag:Name
+  - private-ip-address
+
+compose:
+  ansible_host: instance_id

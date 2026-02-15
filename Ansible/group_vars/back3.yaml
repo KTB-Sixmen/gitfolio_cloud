@@ -1,0 +1,10 @@
+ansible_host_namespace1: notification
+ansible_host_namespace2: kafka
+ansible_host_namespace3: zookeeper
+ansible_host_port: 8080
+ansible_kafka_port1: 9092
+ansible_kafka_port2: 29092
+ansible_zookeeper_port: 2181
+ansible_network_namespace: back
+ansible_kafka_internal_host: kafka1
+ansible_kafka_external_host: 10.0.105.99

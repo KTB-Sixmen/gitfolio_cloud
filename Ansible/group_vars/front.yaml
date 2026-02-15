@@ -1,0 +1,3 @@
+ansible_host_namespace: front
+ansible_host_port: 3000
+ansible_network_namespace: front

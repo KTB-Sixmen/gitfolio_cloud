@@ -100,8 +100,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # Ansible inventory file
-**/group_vars/**
-**/inventory/**
+# **/group_vars/**
+# **/inventory/**
 
 # Environment variables
 # .env

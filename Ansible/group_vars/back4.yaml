@@ -1,0 +1,3 @@
+ansible_host_namespace1: chat
+ansible_host_port: 8080
+ansible_network_namespace: back
